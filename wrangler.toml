@@ -2,6 +2,8 @@ name = "shortener"
 main = "src/app.ts"
 compatibility_date = "2024-10-04"
 
+routes = [{ pattern = "a-ma.zip", custom_domain = true }]
+
 assets = { directory = "./www/", binding = "ASSETS" }
 
 [[d1_databases]]
