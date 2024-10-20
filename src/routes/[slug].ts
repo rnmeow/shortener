@@ -23,6 +23,11 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
       500,
       'There was a problem reading data from the SQL database',
     )
+  } else if (results.length === 0) {
+    throw genHttpException(
+      404,
+      'The page you requested for might have been removed or renamed',
+    )
   }
 
   return ctxt.body(null, {
