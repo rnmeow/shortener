@@ -30,7 +30,7 @@ import { genHttpException } from '@/errors/http_error'
 const app = new Hono({ router: new RegExpRouter() }).use(trimTrailingSlash())
 
 app.get('/', ...webpageHandlers)
-app.get('/:slug{[a-zA-Z0-9_-]{3,64}}/', ...redirectHandlers)
+app.get('/:slug{[a-zA-Z0-9_-]{3,64}}/?', ...redirectHandlers)
 
 app.put('/api/shorten', ...shortenHandlers)
 app.put('/api/revoke', ...revokeHandlers)
