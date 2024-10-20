@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^18 || >=20",
+    "pnpm": "^9"
+  },
+  "author": "Connor Kuo <touch@rnmeow.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:rnmeow/shortner.git"
+  },
+  "scripts": {
+    "format": "prettier ./src --write",
+    "dev": "wrangler dev --live-reload",
+    "deploy": "wrangler deploy --minify"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241011.0",
+    "prettier": "^3.3.3",
+    "wrangler": "^3.80.4"
+  },
+  "dependencies": {
+    "hono": "4.6.4",
+    "nanoid": "^5.0.7"
+  }
+}

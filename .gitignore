@@ -1,0 +1,11 @@
+logs
+*.log
+npm-debug.log*
+
+.vscode
+
+.wrangler
+node_modules
+
+.dev.vars
+.env*

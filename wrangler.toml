@@ -1,0 +1,10 @@
+name = "test"
+main = "src/app.ts"
+compatibility_date = "2024-10-04"
+
+assets = { directory = "./www/", binding = "ASSETS" }
+
+[[d1_databases]]
+binding = "DB"
+database_name = "url-shortner-db"
+database_id = "83e2a789-0639-4e3b-b2e3-545deb75a421"
