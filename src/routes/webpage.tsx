@@ -13,7 +13,8 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
         <head>
           <meta charset="utf-8" />
           <title>URL Shortner</title>
-          <link rel="stylesheet" href="/static/css/style.css" />
+          <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
+          <!-- <link rel="stylesheet" href="/static/css/style.css" /> -->
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="description" content="A URL shortner, by Connor." />
           <meta name="author" content="Connor Kuo" />
