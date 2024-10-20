@@ -6,6 +6,7 @@
     "pnpm": "^9"
   },
   "author": "Connor Kuo <touch@rnmeow.com>",
+  "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com:rnmeow/shortner.git"
