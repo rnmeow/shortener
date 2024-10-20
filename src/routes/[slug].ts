@@ -18,10 +18,10 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     .bind(slug)
     .all()
 
-  if (!sqlReadSuccess) {
+  if (!sqlReadSuccess || results.length > 1) {
     throw genHttpException(
       500,
-      'There was a problem inserting data to the SQL database',
+      'There was a problem reading data from the SQL database',
     )
   }
 
