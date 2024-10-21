@@ -9,10 +9,11 @@
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:rnmeow/shortner.git"
+    "url": "git+ssh://git@github.com:rnmeow/shortener.git"
   },
   "scripts": {
-    "format": "prettier ./src --write",
+    "format": "prettier ./src -w",
+    "format:check": "prettier ./src -c",
     "dev": "wrangler dev --live-reload",
     "deploy": "wrangler deploy --minify"
   },
