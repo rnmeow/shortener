@@ -80,10 +80,11 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
       shortenedUrl: string
     }
   >({
-    apiVersion: 0,
-    env: 'production',
+    timestamp: Date.now(),
+    version: 0,
     status: '200 ok',
     message: 'Operation succeeded :)',
+
     shortenedUrl: new URL(slug, baseUrl).href,
   })
 })

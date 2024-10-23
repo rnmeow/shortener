@@ -1,6 +1,6 @@
 export type JsonResp = {
-  apiVersion: number
-  env: 'production' | 'development'
+  timestamp: number
+  version: number
   status: string
   message?: string
 }
