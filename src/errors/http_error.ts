@@ -1,43 +1,42 @@
 import { HTTPException } from 'hono/http-exception'
 import type { StatusCode } from 'hono/utils/http-status'
 
+const httpStatusList = [
+  {
+    code: 400,
+    title: 'Bad Request',
+    refDocSect: 'section-15.5.1',
+  },
+  {
+    code: 404,
+    title: 'Not Found',
+    refDocSect: 'section-15.5.5',
+  },
+  {
+    code: 500,
+    title: 'Internal Server Error',
+    refDocSect: 'section-15.6.1',
+  },
+  {
+    code: 501,
+    title: 'Not Implemented',
+    refDocSect: 'section-15.6.2',
+  },
+]
+
 export function genHttpException(
-  status: StatusCode,
+  code: StatusCode,
   detail: string,
 ): HTTPException {
-  let title: string
-  let refDocSect: string
+  const match = httpStatusList.find((i) => code === i.code)
 
-  switch (status) {
-    case 400:
-      title = 'Bad Request'
-      refDocSect = 'name-400-bad-request'
-      break
+  const title = match?.title ?? 'UNKNOWN ERROR'
+  const refDocSect = match?.refDocSect ?? ''
 
-    case 404:
-      title = 'Not Found'
-      refDocSect = 'name-404-not-found'
-      break
-
-    case 500:
-      title = 'Internal Server Error'
-      refDocSect = 'name-500-internal-server-error'
-      break
-
-    case 501:
-      title = 'Not Implemented'
-      refDocSect = 'name-501-not-implemented'
-      break
-
-    default:
-      title = 'UNKNOWN ERROR'
-      refDocSect = ''
-  }
-
-  return new HTTPException(status, {
+  return new HTTPException(code, {
     res: new Response(
       JSON.stringify({
-        status,
+        code,
         title,
         type: `https://datatracker.ietf.org/doc/html/rfc9110#${refDocSect}`,
         detail: `${detail} :(`,
