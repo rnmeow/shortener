@@ -13,6 +13,11 @@ const httpStatusList = [
     refDocSect: 'section-15.5.5',
   },
   {
+    code: 418,
+    title: '(Unused)',
+    refDocSect: 'section-15.5.19',
+  },
+  {
     code: 500,
     title: 'Internal Server Error',
     refDocSect: 'section-15.6.1',
