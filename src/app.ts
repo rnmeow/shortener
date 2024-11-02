@@ -36,9 +36,10 @@ const app = new Hono<{ Bindings: { CACHE: KVNamespace } }>({
 app.use((ctxt: Context, next) =>
   rateLimiter({
     windowMs: 10 * 60 * 1000, // 10 mins
-    limit: 10,
+    limit: 30,
     standardHeaders: 'draft-6',
-    keyGenerator: (ctxt) => ctxt.req.header('cf-connecting-ip') ?? '',
+    keyGenerator: (ctxt) =>
+      ctxt.req.header('cf-connecting-ip') ?? 'UNAUTHORIZED',
     store: new WorkersKVStore({ namespace: ctxt.env.CACHE }),
   })(ctxt, next),
 )
