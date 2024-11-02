@@ -1,5 +1,6 @@
 import { createFactory } from 'hono/factory'
 import { logger } from 'hono/logger'
+
 import { nanoid } from 'nanoid/non-secure'
 
 import { baseUrl, randSlugSize } from '@/conf'
@@ -74,6 +75,9 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
       'There was a problem inserting data to the SQL database',
     )
   }
+
+  // TEMP SOLUTION SINCE TOKEN ISN'T DESIGNED
+  ctxt.header('Referrer-Policy', 'strict-origin-when-cross-origin')
 
   return ctxt.json<
     JsonResp & {

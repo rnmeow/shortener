@@ -10,3 +10,7 @@ assets = { directory = "./www/", binding = "ASSETS" }
 binding = "DB"
 database_name = "url-shortner-db"
 database_id = "83e2a789-0639-4e3b-b2e3-545deb75a421"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "984436f7bb5f413fb972b97d982e3e84"
