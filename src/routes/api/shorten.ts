@@ -4,7 +4,7 @@ import { logger } from 'hono/logger'
 import { nanoid } from 'nanoid/non-secure'
 
 import { baseUrl, randSlugSize } from '@/conf'
-import { genHttpException } from '@/errors/http_error'
+import { stanHttpException } from '@/errors/http_error'
 
 import type { JsonResp } from '@/http_resp.d'
 
@@ -26,25 +26,28 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
   // check POST inputs
 
   if (body.slug && typeof body.slug !== 'string') {
-    throw genHttpException(400, 'The provided `slug` should be a string')
+    throw stanHttpException(400, 'The provided `slug` should be a string')
   } else if (body.slug && !/^[a-zA-Z0-9_-]{3,64}$/g.test(body.slug)) {
-    throw genHttpException(
+    throw stanHttpException(
       400,
       'The provided `slug` should be safe and between 3 to 64 digits',
     )
   } else if (!body.destination) {
-    throw genHttpException(
+    throw stanHttpException(
       400,
       'It is required to provide the `destination` field',
     )
   } else if (typeof body.destination !== 'string') {
-    throw genHttpException(400, 'The provided `destination` should be a string')
+    throw stanHttpException(
+      400,
+      'The provided `destination` should be a string',
+    )
   } else if (
     !/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9-()]{1,63}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)$/g.test(
       body.destination,
     )
   ) {
-    throw genHttpException(
+    throw stanHttpException(
       400,
       'The provided `destination` should be a valid URL',
     )
@@ -61,7 +64,7 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     slug === 'api' ||
     (await isSlugTaken(db, slug)).results.length !== 0
   ) {
-    throw genHttpException(400, 'The provided `slug` is already taken')
+    throw stanHttpException(400, 'The provided `slug` is already taken')
   }
 
   const { success: sqlInsertSuccess } = await db
@@ -70,7 +73,7 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     .run()
 
   if (!sqlInsertSuccess) {
-    throw genHttpException(
+    throw stanHttpException(
       500,
       'There was a problem inserting data to the SQL database',
     )

@@ -5,45 +5,45 @@ const httpStatusList = [
   {
     code: 400,
     title: 'Bad Request',
-    refDocSect: 'section-15.5.1',
+    refSection: 'section-15.5.1',
   },
   {
     code: 404,
     title: 'Not Found',
-    refDocSect: 'section-15.5.5',
+    refSection: 'section-15.5.5',
   },
   {
     code: 418,
     title: '(Unused)',
-    refDocSect: 'section-15.5.19',
+    refSection: 'section-15.5.19',
   },
   {
     code: 500,
     title: 'Internal Server Error',
-    refDocSect: 'section-15.6.1',
+    refSection: 'section-15.6.1',
   },
   {
     code: 501,
     title: 'Not Implemented',
-    refDocSect: 'section-15.6.2',
+    refSection: 'section-15.6.2',
   },
 ]
 
-export function genHttpException(
+export function stanHttpException(
   code: StatusCode,
   detail: string,
 ): HTTPException {
   const match = httpStatusList.find((i) => code === i.code)
 
   const title = match?.title ?? 'UNKNOWN ERROR'
-  const refDocSect = match?.refDocSect ?? ''
+  const refSection = match?.refSection ?? ''
 
   return new HTTPException(code, {
     res: new Response(
       JSON.stringify({
         code,
         title,
-        type: `https://datatracker.ietf.org/doc/html/rfc9110#${refDocSect}`,
+        type: `https://datatracker.ietf.org/doc/html/rfc9110#${refSection}`,
         detail: `${detail} :(`,
       }),
       {

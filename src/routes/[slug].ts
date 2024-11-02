@@ -1,7 +1,7 @@
 import { createFactory } from 'hono/factory'
 import { logger } from 'hono/logger'
 
-import { genHttpException } from '@/errors/http_error'
+import { stanHttpException } from '@/errors/http_error'
 
 const factory = createFactory<{
   Bindings: { VERIFICARTION_TOKEN: string; DB: D1Database }
@@ -19,12 +19,12 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     .all()
 
   if (!sqlReadSuccess || results.length > 1) {
-    throw genHttpException(
+    throw stanHttpException(
       500,
       'There was a problem reading data from the SQL database',
     )
   } else if (results.length === 0) {
-    throw genHttpException(
+    throw stanHttpException(
       404,
       'The page you requested for might have been removed or renamed',
     )

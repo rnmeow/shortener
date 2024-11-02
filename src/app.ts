@@ -27,7 +27,7 @@ import { handlers as redirectHandlers } from '@/routes/[slug]'
 import { handlers as shortenHandlers } from '@/routes/api/shorten'
 import { handlers as revokeHandlers } from '@/routes/api/revoke'
 
-import { genHttpException } from '@/errors/http_error'
+import { stanHttpException } from '@/errors/http_error'
 
 const app = new Hono<{ Bindings: { CACHE: KVNamespace } }>({
   router: new RegExpRouter(),
@@ -53,7 +53,7 @@ app
   .put('/api/revoke', ...revokeHandlers)
 
 app.notFound(() => {
-  throw genHttpException(
+  throw stanHttpException(
     404,
     'The page you requested for might have been removed or renamed',
   )
