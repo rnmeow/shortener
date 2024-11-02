@@ -18,14 +18,14 @@
     "deploy": "wrangler deploy --minify"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241018.0",
+    "@cloudflare/workers-types": "^4.20241022.0",
     "prettier": "^3.3.3",
-    "wrangler": "^3.81.0"
+    "wrangler": "^3.84.1"
   },
   "dependencies": {
     "@hono-rate-limiter/cloudflare": "^0.2.1",
-    "hono": "4.6.5",
+    "hono": "^4.6.8",
     "hono-rate-limiter": "^0.4.0",
-    "nanoid": "^5.0.7"
+    "nanoid": "^5.0.8"
   }
 }
