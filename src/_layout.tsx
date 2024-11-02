@@ -63,10 +63,10 @@ const Layout = (props: PropsWithChildren) =>
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <!-- mustache v4.2.0 -->
+    <!-- mustache v3.2.1 -->
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.2.0/mustache.min.js"
-      integrity="sha512-CswfmQmJj8DXhm29Qc5eLk5//2EW1CaI6de+RmRhSrWrXRhkBQ3795tuwJvT6DK6EF4IVqJIRmBg8EokL6c87g=="
+      src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.2.1/mustache.min.js"
+      integrity="sha512-Qjrukx28QnvFWISw9y4wCB0kTB/ISnWXPz5/RME5o8OlZqllWygc1AB64dOBlngeTeStmYmNTNcM6kfEjUdnnQ=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
