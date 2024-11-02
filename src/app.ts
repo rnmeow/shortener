@@ -15,9 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Hono } from 'hono'
+import { Hono, type Context, type Next } from 'hono'
 import { RegExpRouter } from 'hono/router/reg-exp-router'
 import { HTTPException } from 'hono/http-exception'
+
+import { rateLimiter } from 'hono-rate-limiter'
+import {
+  DurableObjectStore,
+  DurableObjectRateLimiter,
+} from '@hono-rate-limiter/cloudflare'
 
 import { handlers as rootHandlers } from '@/routes/root'
 import { handlers as redirectHandlers } from '@/routes/[slug]'
@@ -26,7 +32,17 @@ import { handlers as revokeHandlers } from '@/routes/api/revoke'
 
 import { genHttpException } from '@/errors/http_error'
 
-const app = new Hono({ router: new RegExpRouter() })
+const app = new Hono<{
+  Bindings: { CACHE: DurableObjectNamespace<DurableObjectRateLimiter> }
+}>({ router: new RegExpRouter() }).use((ctxt: Context, next: Next) =>
+  rateLimiter({
+    windowMs: 10 * 60 * 1000, // 10 mins
+    limit: 10,
+    standardHeaders: 'draft-6',
+    keyGenerator: (_ctxt) => crypto.randomUUID(),
+    store: new DurableObjectStore({ namespace: ctxt.env.CACHE }),
+  })(ctxt, next),
+)
 
 app
   .get('/', ...rootHandlers)
@@ -50,5 +66,7 @@ app.onError((err, _ctxt) => {
 
   throw err
 })
+
+export { DurableObjectRateLimiter }
 
 export default app

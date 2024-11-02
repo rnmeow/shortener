@@ -10,3 +10,11 @@ assets = { directory = "./www/", binding = "ASSETS" }
 binding = "DB"
 database_name = "url-shortner-db"
 database_id = "83e2a789-0639-4e3b-b2e3-545deb75a421"
+
+[[durable_objects.bindings]]
+name = "CACHE"
+class_name = "DurableObjectRateLimiter"
+
+[[migrations]]
+tag = "v0"
+new_classes = ["DurableObjectRateLimiter"]
