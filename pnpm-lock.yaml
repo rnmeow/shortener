@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@hono-rate-limiter/cloudflare':
         specifier: ^0.2.1
-        version: 0.2.1(@cloudflare/workers-types@4.20241018.0)(hono@4.6.5)
+        version: 0.2.1(@cloudflare/workers-types@4.20241018.0)(hono@4.6.8)
       hono:
-        specifier: 4.6.5
-        version: 4.6.5
+        specifier: 4.6.8
+        version: 4.6.8
       hono-rate-limiter:
         specifier: ^0.4.0
-        version: 0.4.0(hono@4.6.5)
+        version: 0.4.0(hono@4.6.8)
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
@@ -346,8 +346,8 @@ packages:
     peerDependencies:
       hono: ^4.1.1
 
-  hono@4.6.5:
-    resolution: {integrity: sha512-qsmN3V5fgtwdKARGLgwwHvcdLKursMd+YOt69eGpl1dUCJb8mCd7hZfyZnBYjxCegBG7qkJRQRUy2oO25yHcyQ==}
+  hono@4.6.8:
+    resolution: {integrity: sha512-f+2Ec9JAzabT61pglDiLJcF/DjiSefZkjCn9bzm1cYLGkD5ExJ3Jnv93ax9h0bn7UPLHF81KktoyjdQfWI2n1Q==}
     engines: {node: '>=16.9.0'}
 
   is-binary-path@2.1.0:
@@ -643,10 +643,10 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
-  '@hono-rate-limiter/cloudflare@0.2.1(@cloudflare/workers-types@4.20241018.0)(hono@4.6.5)':
+  '@hono-rate-limiter/cloudflare@0.2.1(@cloudflare/workers-types@4.20241018.0)(hono@4.6.8)':
     dependencies:
       '@cloudflare/workers-types': 4.20241018.0
-      hono: 4.6.5
+      hono: 4.6.8
 
   '@jridgewell/resolve-uri@3.1.2': {}
 
@@ -772,11 +772,11 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hono-rate-limiter@0.4.0(hono@4.6.5):
+  hono-rate-limiter@0.4.0(hono@4.6.8):
     dependencies:
-      hono: 4.6.5
+      hono: 4.6.8
 
-  hono@4.6.5: {}
+  hono@4.6.8: {}
 
   is-binary-path@2.1.0:
     dependencies:
