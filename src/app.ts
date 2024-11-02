@@ -15,13 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Hono, type Context, type Next } from 'hono'
+import { Hono, type Context } from 'hono'
 import { RegExpRouter } from 'hono/router/reg-exp-router'
 import { HTTPException } from 'hono/http-exception'
 
 import { rateLimiter } from 'hono-rate-limiter'
 import { WorkersKVStore } from '@hono-rate-limiter/cloudflare'
-import { KVNamespace } from 'cloudflare:worker'
 
 import { handlers as rootHandlers } from '@/routes/root'
 import { handlers as redirectHandlers } from '@/routes/[slug]'
@@ -30,14 +29,16 @@ import { handlers as revokeHandlers } from '@/routes/api/revoke'
 
 import { genHttpException } from '@/errors/http_error'
 
-const app = new Hono<{
-  Bindings: { CACHE: KVNamespace }
-}>({ router: new RegExpRouter() }).use((ctxt: Context, next: Next) =>
+const app = new Hono<{ Bindings: { CACHE: KVNamespace } }>({
+  router: new RegExpRouter(),
+})
+
+app.use((ctxt: Context, next) =>
   rateLimiter({
     windowMs: 10 * 60 * 1000, // 10 mins
     limit: 10,
     standardHeaders: 'draft-6',
-    keyGenerator: (_ctxt) => crypto.randomUUID(),
+    keyGenerator: (ctxt) => ctxt.req.header('cf-connecting-ip') ?? '',
     store: new WorkersKVStore({ namespace: ctxt.env.CACHE }),
   })(ctxt, next),
 )
