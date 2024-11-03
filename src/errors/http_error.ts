@@ -42,8 +42,8 @@ export function createRfcHttpError(
   const match = httpStatusList.find((i) => code === i.code)
 
   const title = match?.title ?? 'UNKNOWN ERROR'
-  const refSection = match?.refSection ?? ''
   const rfc6585 = match?.rfc6585 ?? false
+  const refSection = match?.refSection ?? ''
 
   return new HTTPException(code, {
     res: new Response(
@@ -56,10 +56,10 @@ export function createRfcHttpError(
         detail: `${detail} :(`,
       }),
       {
-        headers: {
+        headers: new Headers({
           'Content-Type': 'application/problem+json; charset=utf-8',
           'Cache-Control': 'max-age=0, no-store, must-revalidate',
-        },
+        }),
       },
     ),
   })

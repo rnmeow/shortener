@@ -32,9 +32,9 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
 
   return ctxt.body(null, {
     status: 301,
-    headers: {
+    headers: new Headers({
       'Location': results[0].destination as string,
       'Cache-Control': 'max-age=3600',
-    },
+    }),
   })
 })
