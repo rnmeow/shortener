@@ -29,6 +29,8 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
     <meta property="og:site_name" content="URL Shortener" />
     <meta property="og:type" content="website" />
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
+    <linl rel="preconnect" href="https://cdnjs.cloudflare.com/" crossorigin />
+    <linl rel="dns-prefetch" href="https://cdnjs.cloudflare.com/" />
 
     <!-- picocss v2.0.6 -->
     <link
