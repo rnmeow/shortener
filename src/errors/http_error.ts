@@ -29,7 +29,7 @@ const httpStatusList = [
   },
 ]
 
-export function stanHttpException(
+export function createRfcHttpError(
   code: StatusCode,
   detail: string,
 ): HTTPException {

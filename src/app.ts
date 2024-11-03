@@ -27,7 +27,7 @@ import { handlers as revokeHandlers } from '@/routes/api/revoke'
 import { handlers as shortenHandlers } from '@/routes/api/shorten'
 import { handlers as rootHandlers } from '@/routes/root'
 
-import { stanHttpException } from '@/errors/http_error'
+import { createRfcHttpError } from '@/errors/http_error'
 
 const app = new Hono<{ Bindings: { CACHE: KVNamespace } }>({
   strict: false,
@@ -54,7 +54,7 @@ app
   .put('/api/revoke', ...revokeHandlers)
 
 app.notFound(() => {
-  throw stanHttpException(
+  throw createRfcHttpError(
     404,
     'The page you requested for might have been removed or renamed',
   )
