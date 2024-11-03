@@ -54,7 +54,7 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
             const data = JSON.parse(req.response)
             const dataType = req.getResponseHeader('Content-Type')
 
-            this.res = dataType === 'application/json; charset=utf-8' ? data : null
+            this.res = dataType === 'application/json; charset=UTF-8' ? data : null
             this.err = dataType === 'application/problem+json; charset=utf-8' ? data : null
           }
         }">
