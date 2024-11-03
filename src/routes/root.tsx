@@ -138,10 +138,10 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <!-- alpinejs v3.13.5 -->
+    <!-- alpinejs v3.14.3 -->
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.5/cdn.min.js"
-      integrity="sha512-hNPQBXPkQNVedvBobN0rdm9k7cYp+9hkfOWyePa+ml5wubn3kQTqGMokfQ/n8FrgRudUEODKlrnfjZEbxKnKFg=="
+      src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.3/cdn.min.js"
+      integrity="sha512-ZVf/lRjmZflPdIT4hvK4g1T6WupvrXtoTAM86z3S+5En7AhDVhBaxLRF4blGftmzhhPigloA8EP8OTO/Aabmng=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
