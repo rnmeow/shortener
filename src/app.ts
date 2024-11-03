@@ -30,6 +30,7 @@ import { handlers as rootHandlers } from '@/routes/root'
 import { stanHttpException } from '@/errors/http_error'
 
 const app = new Hono<{ Bindings: { CACHE: KVNamespace } }>({
+  strict: false,
   router: new RegExpRouter(),
 })
 
