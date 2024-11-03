@@ -50,22 +50,49 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
         <div x-data="{
           res: null,
           err: null,
+          fat: null,
 
-          handleResp (req) {
-            const data = JSON.parse(req.response)
-            const dataType = req.getResponseHeader('Content-Type')
+          onSubmit (event) {
+            event.preventDefault()
 
-            this.res = dataType === 'application/json; charset=UTF-8' ? data : null
-            this.err = dataType === 'application/problem+json; charset=utf-8' ? data : null
-          }
+            const form = event.target
+            const formData = new FormData(form)
+
+            const payload = {
+              destination: formData.get('destination'),
+              authToken: formData.get('auth-token'),
+              slug: formData.get('slug'),
+            }
+
+            fetch('/api/shorten', {
+              method: 'PUT',
+              body: JSON.stringify(payload),
+              headers: new Headers({
+                'Content-Type': 'application/json',
+              }),
+            })
+              .then(async (resp) => {
+                const data = await resp.json()
+                const dataType = resp.headers.get('Content-Type')
+
+                if (dataType && dataType.includes('application/json')) {
+                  this.res = data
+                  this.err = null
+                  this.fat = null
+                } else if (dataType && dataType.includes('application/problem+json')) {
+                  this.res = null
+                  this.err = data
+                  this.fat = null
+                }
+              })
+              .catch((err) => {
+                this.res = null
+                this.err = null
+                this.fat = err
+              })
+          },
         }">
-          <form
-            hx-put="/api/shorten"
-            hx-trigger="submit"
-            hx-ext="json-enc"
-            hx-swap="none"
-            x-on:htmx:after-request="handleResp($event.detail.xhr)"
-          >
+          <form @submit="onSubmit">
             <label for="destination">
               Long URL <span style="color: var(--pico-del-color);">*</span>
             </label>
@@ -115,6 +142,11 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
             <span x-text="err?.code"></span>:
             <span x-text="err?.detail"></span>
           </p>
+
+          <p x-show="fat">
+            <span style="color: var(--pico-del-color);">FATAL</span>:
+            <span x-text="fat"></span>
+          </p>
         </div>
 
         <footer>
@@ -123,17 +155,6 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
       </main>
     </div>
 
-    <!-- htmx v2.0.3 -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.3/dist/htmx.min.js"
-      integrity="sha256-SRlVzRgQdH19e5zLk2QAr7dg4G0l1T5FcrZLZWOyeE4="
-      crossorigin="anonymous"
-    ></script>
-    <!-- htmx ext json-enc -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/htmx-ext-json-enc@2.0.1/json-enc.min.js"
-      crossorigin="anonymous"
-    ></script>
     <!-- alpinejs v3.14.3 -->
     <script
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"
