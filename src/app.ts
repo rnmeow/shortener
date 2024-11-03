@@ -39,7 +39,7 @@ app.use((ctxt: Context, next) =>
     limit: 30,
     standardHeaders: 'draft-6',
     keyGenerator: (ctxt) =>
-      ctxt.req.header('cf-connecting-ip') ?? 'UNAUTHORIZED',
+      ctxt.req.header('cf-connecting-ip') ?? 'wh3RE_ArE_yOU_fr0M',
     store: new WorkersKVStore({ namespace: ctxt.env.CACHE }),
   })(ctxt, next),
 )
