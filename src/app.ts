@@ -16,16 +16,16 @@
  */
 
 import { Hono, type Context } from 'hono'
-import { RegExpRouter } from 'hono/router/reg-exp-router'
 import { HTTPException } from 'hono/http-exception'
+import { RegExpRouter } from 'hono/router/reg-exp-router'
 
-import { rateLimiter } from 'hono-rate-limiter'
 import { WorkersKVStore } from '@hono-rate-limiter/cloudflare'
+import { rateLimiter } from 'hono-rate-limiter'
 
-import { handlers as rootHandlers } from '@/routes/root'
 import { handlers as redirectHandlers } from '@/routes/[slug]'
-import { handlers as shortenHandlers } from '@/routes/api/shorten'
 import { handlers as revokeHandlers } from '@/routes/api/revoke'
+import { handlers as shortenHandlers } from '@/routes/api/shorten'
+import { handlers as rootHandlers } from '@/routes/root'
 
 import { stanHttpException } from '@/errors/http_error'
 
