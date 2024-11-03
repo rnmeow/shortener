@@ -23,7 +23,7 @@ const isSlugTaken = (db: D1Database, slug: string) =>
 export const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const body = (await ctxt.req.json()) satisfies Request
 
-  // check POST inputs
+  // check PUT body
 
   if (body.slug && typeof body.slug !== 'string') {
     throw stanHttpException(400, 'The provided `slug` should be a string')
@@ -78,9 +78,6 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
       'There was a problem inserting data to the SQL database',
     )
   }
-
-  // TEMP SOLUTION SINCE TOKEN ISN'T DESIGNED
-  ctxt.header('Referrer-Policy', 'strict-origin-when-cross-origin')
 
   return ctxt.json<
     JsonResp & {
