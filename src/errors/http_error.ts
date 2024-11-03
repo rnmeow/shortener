@@ -18,6 +18,12 @@ const httpStatusList = [
     refSection: 'section-15.5.19',
   },
   {
+    code: 429,
+    title: 'Too Many Requests',
+    rfc6585: true,
+    refSection: 'section-4',
+  },
+  {
     code: 500,
     title: 'Internal Server Error',
     refSection: 'section-15.6.1',
@@ -37,13 +43,16 @@ export function createRfcHttpError(
 
   const title = match?.title ?? 'UNKNOWN ERROR'
   const refSection = match?.refSection ?? ''
+  const rfc6585 = match?.rfc6585 ?? false
 
   return new HTTPException(code, {
     res: new Response(
       JSON.stringify({
         code,
         title,
-        type: `https://datatracker.ietf.org/doc/html/rfc9110#${refSection}`,
+        type: rfc6585
+          ? `https://datatracker.ietf.org/doc/html/rfc6585#${refSection}`
+          : `https://datatracker.ietf.org/doc/html/rfc9110#${refSection}`,
         detail: `${detail} :(`,
       }),
       {

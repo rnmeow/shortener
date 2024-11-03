@@ -38,10 +38,16 @@ app.use((ctxt: Context, next) =>
   rateLimiter({
     windowMs: 600000, // in ms, 10 mins (10 * 60 * 1000)
     limit: 30,
-    standardHeaders: 'draft-6',
+    standardHeaders: 'draft-7',
+    store: new WorkersKVStore({ namespace: ctxt.env.CACHE }),
     keyGenerator: (ctxt) =>
       ctxt.req.header('cf-connecting-ip') ?? 'wh3RE_ArE_yOU_fr0M',
-    store: new WorkersKVStore({ namespace: ctxt.env.CACHE }),
+    handler: () => {
+      throw createRfcHttpError(
+        429,
+        "Don't you think that this amount of requests is too much?",
+      )
+    },
   })(ctxt, next),
 )
 
