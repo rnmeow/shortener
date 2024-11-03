@@ -29,16 +29,15 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
     <meta property="og:site_name" content="URL Shortener" />
     <meta property="og:type" content="website" />
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com/" crossorigin />
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com/" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net/" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/" />
 
     <!-- picocss v2.0.6 -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/picocss/2.0.6/pico.min.css"
-      integrity="sha512-UXfikgakSZBii5lkvmDCRO+IYWQhTtwMOJ+3EmGEA+oA82kvbSskgw3OI16Jx1kINgF8aqOkYE+c9h4m6muONg=="
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css"
+      integrity="sha256-3V/VWRr9ge4h3MEXrYXAFNw/HxncLXt9EB6grMKSdMI="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     />
   </head>
   <body>
@@ -126,24 +125,20 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
 
     <!-- htmx v2.0.3 -->
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.3/htmx.min.js"
-      integrity="sha512-dQu3OKLMpRu85mW24LA1CUZG67BgLPR8Px3mcxmpdyijgl1UpCM1RtJoQP6h8UkufSnaHVRTUx98EQT9fcKohw=="
+      src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.3/dist/htmx.min.js"
+      integrity="sha256-SRlVzRgQdH19e5zLk2QAr7dg4G0l1T5FcrZLZWOyeE4="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     ></script>
-    <!-- json-enc for htmx -->
+    <!-- htmx ext json-enc -->
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.3/ext/json-enc.min.js"
-      integrity="sha512-j1k3ETNtJhZQDDFx26zOEVNermFueca+81zGri6ScAdHY2fjY+bbDTpujOxss9XihJpvhFXz6BRUQwmczQhDLw=="
+      src="https://cdn.jsdelivr.net/npm/htmx-ext-json-enc@2.0.1/json-enc.min.js"
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     ></script>
     <!-- alpinejs v3.14.3 -->
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.3/cdn.min.js"
-      integrity="sha512-ZVf/lRjmZflPdIT4hvK4g1T6WupvrXtoTAM86z3S+5En7AhDVhBaxLRF4blGftmzhhPigloA8EP8OTO/Aabmng=="
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"
+      integrity="sha256-aJ9ROXjRHWn00zeU9ylsmlhqLlXeebtEfN28P0dPnwc="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     ></script>
   </body>
 </html>
