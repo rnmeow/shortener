@@ -21,7 +21,7 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
           mustache-template="templ"
         >
           <label for="destination">
-            Long URL <span style="color: #f44;">*</span>
+            Long URL <span style="color: var(--pico-del-color);">*</span>
           </label>
 
           <input
@@ -34,7 +34,7 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
           <div class="grid">
             <div>
               <label for="auth-token">
-                Auth Token <span style="color: #f44;">*</span>
+                Auth Token <span style="color: var(--pico-del-color);">*</span>
               </label>
               <input
                 type="text"
@@ -60,12 +60,12 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
 
         <template id="templ">
           {'{{ #shortenedUrl }}'}
-          <span style="color: #7f7;">Successfully</span> shortened! The
-          shortened URL is:{' '}
+          <span style="color: var(--pico-ins-color);">Successfully</span>{' '}
+          shortened! The shortened URL is:{' '}
           <a href="{{ shortenedUrl }}">{'{{ shortenedUrl }}'}</a>.
           {'{{ /shortenedUrl }} {{ #code }}'}
-          <span style="color: #f44;">HTTP Error</span> {'{{ code }}'}:{' '}
-          {'{{ detail }}'}
+          <span style="color: var(--pico-del-color);">HTTP Error</span>{' '}
+          {'{{ code }}'}: {'{{ detail }}'}
           {'{{ /code }}'}
         </template>
 
