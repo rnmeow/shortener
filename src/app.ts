@@ -36,7 +36,7 @@ const app = new Hono<{ Bindings: { CACHE: KVNamespace } }>({
 
 app.use((ctxt: Context, next) =>
   rateLimiter({
-    windowMs: 10 * 60 * 1000, // 10 mins
+    windowMs: 600000, // in ms, 10 mins (10 * 60 * 1000)
     limit: 30,
     standardHeaders: 'draft-6',
     keyGenerator: (ctxt) =>
