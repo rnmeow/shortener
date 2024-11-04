@@ -5,4 +5,4 @@ export type JsonResp = {
   message?: string
 }
 
-export type TextResp = string
+// export type TextResp = string

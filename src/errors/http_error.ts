@@ -60,22 +60,23 @@ export function createRfcHttpError(
     rfc6585 = match?.rfc6585 ?? false,
     refSection = match?.refSection ?? ''
 
+  const payload = {
+    code,
+    title,
+    type: rfc6585
+      ? `https://datatracker.ietf.org/doc/html/rfc6585#${refSection}`
+      : `https://datatracker.ietf.org/doc/html/rfc9110#${refSection}`,
+    detail: `${detail} :(`,
+  }
+
+  const headers = new Headers({
+    'Content-Type': 'application/problem+json; charset=utf-8',
+    'Cache-Control': 'max-age=0, no-store, must-revalidate',
+  })
+
   return new HTTPException(code, {
-    res: new Response(
-      JSON.stringify({
-        code,
-        title,
-        type: rfc6585
-          ? `https://datatracker.ietf.org/doc/html/rfc6585#${refSection}`
-          : `https://datatracker.ietf.org/doc/html/rfc9110#${refSection}`,
-        detail: `${detail} :(`,
-      }),
-      {
-        headers: new Headers({
-          'Content-Type': 'application/problem+json; charset=utf-8',
-          'Cache-Control': 'max-age=0, no-store, must-revalidate',
-        }),
-      },
-    ),
+    res: new Response(JSON.stringify(payload), {
+      headers,
+    }),
   })
 }
