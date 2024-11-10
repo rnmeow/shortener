@@ -13,12 +13,12 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
   // should've been checked in route with regexp
   const { slug } = ctxt.req.param()
 
-  const { success: sqlReadSuccess, results } = await db
+  const { success, results } = await db
     .prepare(`SELECT destination FROM URLs WHERE slug = ?;`)
     .bind(slug)
     .all()
 
-  if (!sqlReadSuccess || results.length > 1) {
+  if (!success || results.length > 1) {
     throw createRfcHttpError(
       500,
       'There was a problem reading data from the SQL database',

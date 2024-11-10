@@ -8,7 +8,7 @@ import { createRfcHttpError } from '@/errors/http_error'
 
 import type { JsonResp } from '@/http_resp.d'
 
-type Request = {
+type ReqData = {
   slug?: string
   destination: string
 }
@@ -21,7 +21,7 @@ const isSlugTaken = (db: D1Database, slug: string) =>
   db.prepare(`SELECT slug FROM URLs WHERE slug = ?;`).bind(slug).all()
 
 export const handlers = factory.createHandlers(logger(), async (ctxt) => {
-  const body = (await ctxt.req.json()) satisfies Request
+  const body = (await ctxt.req.json()) satisfies ReqData
 
   // check PUT body
   if (body.slug && typeof body.slug !== 'string') {
@@ -70,12 +70,12 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     throw createRfcHttpError(400, 'The provided `slug` is already taken')
   }
 
-  const { success: sqlInsertSuccess } = await db
+  const { success } = await db
     .prepare(`INSERT INTO URLs (slug, destination) VALUES (?, ?);`)
     .bind(slug, body.destination)
     .run()
 
-  if (!sqlInsertSuccess) {
+  if (!success) {
     throw createRfcHttpError(
       500,
       'There was a problem inserting data to the SQL database',
