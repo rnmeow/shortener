@@ -13,8 +13,8 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
 <html>
   <head>
     <meta charset="utf-8" />
-
     <title>URL Shortener</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A URL shortener, created by Connor." />
     <meta name="author" content="Connor Kuo" />
@@ -29,16 +29,7 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
     <meta property="og:site_name" content="URL Shortener" />
     <meta property="og:type" content="website" />
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net/" crossorigin />
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/" />
-
-    <!-- picocss v2.0.6 -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css"
-      integrity="sha256-3V/VWRr9ge4h3MEXrYXAFNw/HxncLXt9EB6grMKSdMI="
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="/lib/pico-2.0.6.min.css" />
   </head>
   <body>
     <div style="display: flex; min-height: 100vh; align-items: center;">
@@ -155,12 +146,7 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
       </main>
     </div>
 
-    <!-- alpinejs v3.14.3 -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"
-      integrity="sha256-aJ9ROXjRHWn00zeU9ylsmlhqLlXeebtEfN28P0dPnwc="
-      crossorigin="anonymous"
-    ></script>
+    <script src="/lib/alpinejs-3.14.3.min.js" defer></script>
   </body>
 </html>
 `,
