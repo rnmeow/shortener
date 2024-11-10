@@ -24,25 +24,28 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const body = (await ctxt.req.json()) satisfies Request
 
   // check PUT body
-
   if (body.slug && typeof body.slug !== 'string') {
     throw createRfcHttpError(400, 'The provided `slug` should be a string')
-  } else if (body.slug && !/^[a-zA-Z0-9_-]{3,64}$/g.test(body.slug)) {
+  }
+  if (body.slug && !/^[a-zA-Z0-9_-]{3,64}$/g.test(body.slug)) {
     throw createRfcHttpError(
       400,
       'The provided `slug` should be safe and between 3 to 64 digits',
     )
-  } else if (!body.destination) {
+  }
+  if (!body.destination) {
     throw createRfcHttpError(
       400,
       'It is required to provide the `destination` field',
     )
-  } else if (typeof body.destination !== 'string') {
+  }
+  if (typeof body.destination !== 'string') {
     throw createRfcHttpError(
       400,
       'The provided `destination` should be a string',
     )
-  } else if (
+  }
+  if (
     !/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9-()]{1,63}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)$/g.test(
       body.destination,
     )
