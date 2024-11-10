@@ -32,113 +32,65 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
     <link rel="stylesheet" href="/lib/pico-2.0.6.min.css" />
   </head>
   <body>
-    <div style="display: flex; min-height: 100vh; align-items: center;">
-      <main class="container">
+    <div style="display: flex; min-height: 100vh; align-items: center">
+      <main class="container" x-data="shortenerData">
         <header>
           <h1>URL Shortener</h1>
         </header>
 
-        <div x-data="{
-          res: null,
-          err: null,
-          fat: null,
+        <form @submit="onSubmit">
+          <label for="destination">
+            Long URL <span style="color: var(--pico-del-color)">*</span>
+          </label>
 
-          onSubmit (event) {
-            event.preventDefault()
+          <input
+            type="url"
+            name="destination"
+            placeholder="https://example.com/~4n/3x7reMe1Y-LOng/uRl?eV3N=w1TH&P4RamS"
+            required
+          />
 
-            const form = event.target
-            const formData = new FormData(form)
-
-            const payload = {
-              destination: formData.get('destination'),
-              authToken: formData.get('auth-token'),
-              slug: formData.get('slug'),
-            }
-
-            fetch('/api/shorten', {
-              method: 'PUT',
-              body: JSON.stringify(payload),
-              headers: new Headers({
-                'Content-Type': 'application/json',
-              }),
-            })
-              .then(async (resp) => {
-                const data = await resp.json()
-                const dataType = resp.headers.get('Content-Type')
-
-                if (dataType && dataType.includes('application/json')) {
-                  this.res = data
-                  this.err = null
-                  this.fat = null
-                } else if (dataType && dataType.includes('application/problem+json')) {
-                  this.res = null
-                  this.err = data
-                  this.fat = null
-                }
-              })
-              .catch((err) => {
-                this.res = null
-                this.err = null
-                this.fat = err
-              })
-          },
-        }">
-          <form @submit="onSubmit">
-            <label for="destination">
-              Long URL <span style="color: var(--pico-del-color);">*</span>
-            </label>
-
-            <input
-              type="url"
-              name="destination"
-              placeholder="https://example.com/~4n/3x7reMe1Y-LOng/uRl?eV3N=w1TH&P4RamS"
-              required
-            />
-
-            <div class="grid">
-              <div>
-                <label for="auth-token">
-                  Auth Token <span style="color: var(--pico-del-color);">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="auth-token"
-                  x-bind:placeholder="crypto.randomUUID()"
-                  required
-                />
-              </div>
-              <div>
-                <label for="slug">Slug</label>
-                <input
-                  type="text"
-                  name="slug"
-                  placeholder="[a-zA-Z0-9_-]{3,64}"
-                />
-              </div>
+          <div class="grid">
+            <div>
+              <label for="auth-token">
+                Auth Token <span style="color: var(--pico-del-color)">*</span>
+              </label>
+              <input
+                type="text"
+                name="auth-token"
+                x-bind:placeholder="crypto.randomUUID()"
+                required
+              />
             </div>
+            <div>
+              <label for="slug">Slug</label>
+              <input
+                type="text"
+                name="slug"
+                placeholder="[a-zA-Z0-9_-]{3,64}"
+              />
+            </div>
+          </div>
 
-            <button type="submit" class="contrast">
-              Shorten!
-            </button>
-          </form>
+          <button type="submit" class="contrast">Shorten!</button>
+        </form>
 
-          <p x-show="res">
-            <span style="color: var(--pico-ins-color);">Successfully</span>
-            shortened! The shortened URL is:
-            <a x-bind:href="res?.shortenedUrl" x-text="res?.shortenedUrl"></a>
-          </p>
+        <p x-show="res">
+          <span style="color: var(--pico-ins-color)">Successfully</span>
+          shortened! The shortened URL is:
+          <a x-bind:href="res?.shortenedUrl" x-text="res?.shortenedUrl"></a>
+        </p>
 
-          <p x-show="err">
-            <span style="color: var(--pico-del-color);">HTTP Error</span>
-            <span x-text="err?.code"></span>:
-            <span x-text="err?.detail"></span>
-          </p>
+        <p x-show="err">
+          <span style="color: var(--pico-del-color)">HTTP Error</span>
+          <span x-text="err?.code"></span>:
+          <span x-text="err?.detail"></span>
+        </p>
 
-          <p x-show="fat">
-            <span style="color: var(--pico-del-color);">FATAL</span>:
-            <span x-text="fat"></span>
-          </p>
-        </div>
+        <p x-show="fat">
+          <span style="color: var(--pico-del-color)">FATAL</span>:
+          <span x-text="fat"></span>
+        </p>
 
         <footer>
           <small>&copy; 2024, Connor Kuo.</small>
@@ -147,6 +99,56 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
     </div>
 
     <script src="/lib/alpinejs-3.14.3.min.js" defer></script>
+    <script>
+      const shortenerData = {
+        res: null,
+        err: null,
+        fat: null,
+
+        onSubmit(event) {
+          event.preventDefault()
+
+          const form = event.target
+          const formData = new FormData(form)
+
+          const payload = {
+            destination: formData.get('destination'),
+            authToken: formData.get('auth-token'),
+            slug: formData.get('slug'),
+          }
+
+          fetch('/api/shorten', {
+            method: 'PUT',
+            body: JSON.stringify(payload),
+            headers: new Headers({
+              'Content-Type': 'application/json',
+            }),
+          })
+            .then(async (resp) => {
+              const data = await resp.json()
+              const dataType = resp.headers.get('Content-Type')
+
+              if (dataType && dataType.includes('application/json')) {
+                this.res = data
+                this.err = null
+                this.fat = null
+              } else if (
+                dataType &&
+                dataType.includes('application/problem+json')
+              ) {
+                this.res = null
+                this.err = data
+                this.fat = null
+              }
+            })
+            .catch((err) => {
+              this.res = null
+              this.err = null
+              this.fat = err
+            })
+        },
+      }
+    </script>
   </body>
 </html>
 `,
