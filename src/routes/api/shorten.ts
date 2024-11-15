@@ -23,37 +23,25 @@ const isSlugTaken = (db: D1Database, slug: string) =>
 export const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const body = (await ctxt.req.json()) satisfies ReqData
 
-  // check PUT body
-  if (body.slug && typeof body.slug !== 'string') {
-    throw createRfcHttpError(400, 'The provided `slug` should be a string')
-  }
-  if (body.slug && !/^[a-zA-Z0-9_-]{3,64}$/g.test(body.slug)) {
-    throw createRfcHttpError(
-      400,
-      'The provided `slug` should be safe and between 3 to 64 digits',
-    )
-  }
   if (!body.destination) {
-    throw createRfcHttpError(
-      400,
-      'It is required to provide the `destination` field',
-    )
+    throw createRfcHttpError(400, 'Destination is required')
   }
   if (typeof body.destination !== 'string') {
-    throw createRfcHttpError(
-      400,
-      'The provided `destination` should be a string',
-    )
+    throw createRfcHttpError(400, 'Destination must be a string')
   }
   if (
     !/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9-()]{1,63}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)$/g.test(
       body.destination,
     )
   ) {
-    throw createRfcHttpError(
-      400,
-      'The provided `destination` should be a valid URL',
-    )
+    throw createRfcHttpError(400, 'Destination must be a valid URL')
+  }
+
+  if (body.slug && typeof body.slug !== 'string') {
+    throw createRfcHttpError(400, 'Slug must be a string')
+  }
+  if (body.slug && !/^[a-zA-Z0-9_-]{3,64}$/g.test(body.slug)) {
+    throw createRfcHttpError(400, 'Slug must be safe and 3–64 characters long')
   }
 
   const db = ctxt.env.DB
@@ -67,7 +55,7 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     slug === 'api' ||
     (await isSlugTaken(db, slug)).results.length !== 0
   ) {
-    throw createRfcHttpError(400, 'The provided `slug` is already taken')
+    throw createRfcHttpError(400, `Slug \`${slug}\` is already in use`)
   }
 
   const { success } = await db
@@ -76,10 +64,7 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     .run()
 
   if (!success) {
-    throw createRfcHttpError(
-      500,
-      'There was a problem inserting data to the SQL database',
-    )
+    throw createRfcHttpError(500, 'Error inserting data into the database')
   }
 
   return ctxt.json<

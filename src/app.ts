@@ -41,10 +41,7 @@ app.use(async (ctxt, next) => {
   })
 
   if (!success) {
-    throw createRfcHttpError(
-      429,
-      "Don't you think that this amount of requests is too much?",
-    )
+    throw createRfcHttpError(429, "Isn't this many requests excessive?")
   }
 })
 
@@ -59,7 +56,7 @@ app
 app.notFound(() => {
   throw createRfcHttpError(
     404,
-    'The page you requested for might have been removed or renamed',
+    'The requested page may have been removed or renamed',
   )
 })
 

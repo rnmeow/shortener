@@ -19,14 +19,12 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     .all()
 
   if (!success || results.length > 1) {
-    throw createRfcHttpError(
-      500,
-      'There was a problem reading data from the SQL database',
-    )
-  } else if (results.length === 0) {
+    throw createRfcHttpError(500, 'Error reading data from the database')
+  }
+  if (results.length === 0) {
     throw createRfcHttpError(
       404,
-      'The page you requested for might have been removed or renamed',
+      'The requested page may have been removed or renamed',
     )
   }
 
