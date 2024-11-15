@@ -15,12 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Hono, type Context } from 'hono'
+import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { RegExpRouter } from 'hono/router/reg-exp-router'
 
-import { WorkersKVStore } from '@hono-rate-limiter/cloudflare'
-import { rateLimiter } from 'hono-rate-limiter'
+import type { RateLimit } from '@cloudflare/workers-types'
 
 import { handlers as redirectHandlers } from '@/routes/[slug]'
 import { handlers as revokeHandlers } from '@/routes/api/revoke'
@@ -29,26 +28,25 @@ import { handlers as rootHandlers } from '@/routes/root'
 
 import { createRfcHttpError } from '@/errors/http_error'
 
-const app = new Hono<{ Bindings: { CACHE: KVNamespace } }>({
+const app = new Hono<{ Bindings: { RATE_LIMITER: RateLimit } }>({
   strict: false,
   router: new RegExpRouter(),
 })
 
-// prettier-ignore
-app.use((ctxt: Context, next) => rateLimiter({
-  windowMs: 600000, // in ms, 10 mins (10 * 60 * 1000)
-  limit: 30,
-  standardHeaders: 'draft-7',
-  store: new WorkersKVStore({ namespace: ctxt.env.CACHE }),
-  keyGenerator: (ctxt) =>
-    ctxt.req.header('cf-connecting-ip') ?? 'wh3RE_ArE_yOU_fr0M',
-  handler: () => {
+app.use(async (ctxt, next) => {
+  await next()
+
+  const { success } = await ctxt.env.RATE_LIMITER.limit({
+    key: ctxt.req.header('cf-connecting-ip') ?? 'wh3RE_ArE_yOU_fr0M',
+  })
+
+  if (!success) {
     throw createRfcHttpError(
       429,
       "Don't you think that this amount of requests is too much?",
     )
-  },
-})(ctxt, next))
+  }
+})
 
 app
   .get('/', ...rootHandlers)

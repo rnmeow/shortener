@@ -10,11 +10,13 @@ assets = { directory = "./www/", binding = "ASSETS" }
 enabled = true
 head_sampling_rate = 0.2
 
+[[unsafe.bindings]]
+name = "RATE_LIMITER"
+type = "ratelimit"
+namespace_id = "9001"
+simple = { limit = 50, period = 60 }
+
 [[d1_databases]]
 binding = "DB"
 database_name = "url-shortner-db"
 database_id = "83e2a789-0639-4e3b-b2e3-545deb75a421"
-
-[[kv_namespaces]]
-binding = "CACHE"
-id = "984436f7bb5f413fb972b97d982e3e84"
