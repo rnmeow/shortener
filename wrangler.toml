@@ -1,10 +1,14 @@
 name = "shortener"
 main = "src/app.ts"
-compatibility_date = "2024-10-04"
+compatibility_date = "2024-11-12"
 
 routes = [{ pattern = "a-ma.zip", custom_domain = true }]
 
 assets = { directory = "./www/", binding = "ASSETS" }
+
+[observability]
+enabled = true
+head_sampling_rate = 0.2
 
 [[d1_databases]]
 binding = "DB"
