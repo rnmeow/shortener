@@ -11,7 +11,7 @@ export const middleware = (expMethods: string[]) =>
     if (!expMethods.includes(reqMethod)) {
       throw createRfcHttpError(
         405,
-        `This path doesn\'t support a/an \`${reqMethod}\` request.`,
+        `This path doesn\'t support a/an \`${reqMethod}\` request`,
         {
           Allow: expMethods.join(', '),
         },
