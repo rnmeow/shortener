@@ -4,9 +4,7 @@ import { logger } from 'hono/logger'
 
 import { createRfcHttpError } from '@/errors/http_error'
 
-const factory = createFactory<{
-  Bindings: { VERIFICARTION_TOKEN: string; DB: D1Database }
-}>()
+const factory = createFactory<{ Bindings: { DB: D1Database } }>()
 
 export const handlers = factory.createHandlers(
   logger(),
