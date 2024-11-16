@@ -92,14 +92,12 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
           <span x-text="fat"></span>
         </p>
 
-        <footer>
-          <small>&copy; 2024, Connor Kuo.</small>
-        </footer>
+        <footer>&copy; 2024, Connor Kuo.</footer>
       </main>
     </div>
 
-    <script src="/lib/alpinejs-3.14.3.min.js" defer></script>
-    <script>
+    <script src="/lib/alpinejs-3.14.3.min.js"></script>
+    <script defer>
       const shortenerData = {
         res: null,
         err: null,
