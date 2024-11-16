@@ -24,7 +24,7 @@ import type { RateLimit } from '@cloudflare/workers-types'
 import { handlers as redirectHandlers } from '@/routes/[slug]'
 import { handlers as revokeHandlers } from '@/routes/api/revoke'
 import { handlers as shortenHandlers } from '@/routes/api/shorten'
-import { handlers as rootHandlers } from '@/routes/root'
+import { handlers as webpageHandlers } from '@/routes/webpage'
 
 import { createRfcHttpError } from '@/errors/http_error'
 
@@ -46,7 +46,7 @@ app.use(async (ctxt, next) => {
 })
 
 app
-  .get('/', ...rootHandlers)
+  .get('/', ...webpageHandlers)
   .get('/:slug{[a-zA-Z0-9_-]{3,64}}', ...redirectHandlers)
 
 app
