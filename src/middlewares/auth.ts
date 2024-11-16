@@ -14,7 +14,7 @@ async function sha256Hash(str: string): Promise<string> {
   return hashHex
 }
 
-export const middleware = createMiddleware<{ Bindings: { S3C3E7: string } }>(
+export const middleware = createMiddleware<{ Bindings: { _53CR37: string } }>(
   async (ctxt, next) => {
     await next()
 
@@ -40,7 +40,7 @@ export const middleware = createMiddleware<{ Bindings: { S3C3E7: string } }>(
     }
 
     const magicalStrHash = await sha256Hash(
-      `${tokenParts[0]}_${ctxt.env.S3C3E7}`,
+      `${tokenParts[0]}_${ctxt.env._53CR37}`,
     )
     if (magicalStrHash !== tokenParts[1]) {
       throw createRfcHttpError(401, 'Token invalid')
