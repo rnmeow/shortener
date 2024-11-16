@@ -17,6 +17,7 @@
 
 import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
+import { TrieRouter } from 'hono/router/trie-router'
 
 import { handlers as redirectHandlers } from '@/routes/[slug]'
 import { handlers as webpageHandlers } from '@/routes/webpage'
@@ -26,13 +27,16 @@ import { middleware as rateLimitMiddleware } from '@/middlewares/rate_limit'
 import { api } from '@/api'
 import { createRfcHttpError } from '@/errors/http_error'
 
-const app = new Hono({ strict: false })
+const app = new Hono({
+  strict: false,
+  router: new TrieRouter(),
+})
 
 app.use(rateLimitMiddleware)
 
-app
-  .all('/', ...webpageHandlers)
-  .all('/:slug{[a-zA-Z0-9_-]{3,64}}/', ...redirectHandlers)
+app.all('/', ...webpageHandlers)
+
+app.get('/:slug{[a-zA-Z0-9_-]{3,64}}', ...redirectHandlers)
 
 app.route('/api', api)
 

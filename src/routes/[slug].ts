@@ -2,19 +2,15 @@ import { cache } from 'hono/cache'
 import { createFactory } from 'hono/factory'
 import { logger } from 'hono/logger'
 
-import { middleware as methodRestrMiddleware } from '@/middlewares/method_restrict'
-
 import { createRfcHttpError } from '@/errors/http_error'
 
 const factory = createFactory<{ Bindings: { DB: D1Database } }>()
 
 export const handlers = factory.createHandlers(
   logger(),
-  methodRestrMiddleware(['GET']),
   cache({
-    cacheName: 'shortened_url',
+    cacheName: '_shortened_url',
     cacheControl: 'max-age=172800', // 48 hours
-    keyGenerator: (ctxt) => ctxt.req.path,
   }),
   async (ctxt) => {
     const db = ctxt.env.DB

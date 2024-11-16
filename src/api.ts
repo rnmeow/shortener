@@ -7,10 +7,7 @@ import { handlers as shortenHandlers } from '@/routes/api/shorten'
 import { middleware as authMiddleware } from '@/middlewares/auth'
 import { middleware as methodRestrMiddleware } from '@/middlewares/method_restrict'
 
-const api = new Hono({
-  strict: false,
-  router: new RegExpRouter(),
-})
+const api = new Hono({ router: new RegExpRouter() })
 
 api.use(authMiddleware).use(methodRestrMiddleware(['PUT']))
 
