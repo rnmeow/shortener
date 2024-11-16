@@ -48,7 +48,7 @@ app.onError((err, _ctxt) => {
     return err.getResponse()
   }
 
-  throw err
+  throw createRfcHttpError(500, `FATAL: ${err.message}`)
 })
 
 export default app
