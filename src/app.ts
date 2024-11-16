@@ -17,22 +17,24 @@
 
 import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
-import { RegExpRouter } from 'hono/router/reg-exp-router'
 
 import { handlers as redirectHandlers } from '@/routes/[slug]'
-import { handlers as revokeHandlers } from '@/routes/api/revoke'
-import { handlers as shortenHandlers } from '@/routes/api/shorten'
 import { handlers as webpageHandlers } from '@/routes/webpage'
 
-import { middleware as authMiddleware } from '@/middlewares/auth'
 import { middleware as rateLimitMiddleware } from '@/middlewares/rate_limit'
 
+import { api } from '@/api'
 import { createRfcHttpError } from '@/errors/http_error'
 
-const app = new Hono({
-  strict: false,
-  router: new RegExpRouter(),
-})
+const app = new Hono({ strict: false })
+
+app.use(rateLimitMiddleware)
+
+app
+  .all('/', ...webpageHandlers)
+  .all('/:slug{[a-zA-Z0-9_-]{3,64}}/', ...redirectHandlers)
+
+app.route('/api', api)
 
 app.notFound(() => {
   throw createRfcHttpError(
@@ -48,17 +50,5 @@ app.onError((err, _ctxt) => {
 
   throw err
 })
-
-app.use(rateLimitMiddleware)
-
-app
-  .get('/', ...webpageHandlers)
-  .get('/:slug{[a-zA-Z0-9_-]{3,64}}', ...redirectHandlers)
-
-const api = app.basePath('/api')
-
-api.use(authMiddleware)
-
-api.put('/shorten', ...shortenHandlers).put('/revoke', ...revokeHandlers)
 
 export default app

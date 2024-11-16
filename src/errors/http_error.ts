@@ -27,6 +27,13 @@ const httpStatusMap = new Map<
     },
   ],
   [
+    405,
+    {
+      title: 'Method Not Allowed',
+      refSection: 'section-15.5.6',
+    },
+  ],
+  [
     418,
     {
       title: '(Unused)',
@@ -60,6 +67,7 @@ const httpStatusMap = new Map<
 export function createRfcHttpError(
   code: StatusCode,
   detail: string,
+  customHeaders?: Record<string, string>,
 ): HTTPException {
   const match = httpStatusMap.get(code)
 
@@ -79,6 +87,7 @@ export function createRfcHttpError(
   const headers = new Headers({
     'Content-Type': 'application/problem+json; charset=utf-8',
     'Cache-Control': 'max-age=0, no-store, must-revalidate',
+    ...customHeaders,
   })
 
   return new HTTPException(code, {

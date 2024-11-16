@@ -2,14 +2,19 @@ import { createFactory } from 'hono/factory'
 import { html } from 'hono/html'
 import { logger } from 'hono/logger'
 
+import { middleware as methodRestrMiddleware } from '@/middlewares/method_restrict'
+
 import { baseUrl } from '@/conf'
 
 const factory = createFactory()
 
-export const handlers = factory.createHandlers(logger(), (ctxt) =>
-  ctxt.html(
-    // prettier-ignore
-    html`<!doctype html>
+export const handlers = factory.createHandlers(
+  logger(),
+  methodRestrMiddleware(['GET']),
+  (ctxt) =>
+    ctxt.html(
+      // prettier-ignore
+      html`<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -149,5 +154,5 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
   </body>
 </html>
 `,
-  ),
+    ),
 )
