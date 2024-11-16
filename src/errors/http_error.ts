@@ -13,6 +13,13 @@ const httpStatusMap = new Map<
     },
   ],
   [
+    401,
+    {
+      title: 'Unauthorized',
+      refSection: 'section-15.5.2',
+    },
+  ],
+  [
     404,
     {
       title: 'Not Found',

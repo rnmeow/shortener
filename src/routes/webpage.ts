@@ -58,7 +58,7 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
               <input
                 type="text"
                 name="auth-token"
-                x-bind:placeholder="crypto.randomUUID()"
+                placeholder="%unixTimeNow%:SHA256(%unixTimeNow%_%secret%)"
                 required
               />
             </div>
@@ -96,8 +96,8 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
       </main>
     </div>
 
-    <script src="/lib/alpinejs-3.14.3.min.js"></script>
-    <script defer>
+    <script src="/lib/alpinejs-3.14.3.min.js" defer></script>
+    <script>
       const shortenerData = {
         res: null,
         err: null,
@@ -111,7 +111,6 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
 
           const payload = {
             destination: formData.get('destination'),
-            authToken: formData.get('auth-token'),
             slug: formData.get('slug'),
           }
 
@@ -120,6 +119,7 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
             body: JSON.stringify(payload),
             headers: new Headers({
               'Content-Type': 'application/json',
+              'Authentication': 'Bearer ' + formData.get('auth-token'),
             }),
           })
             .then(async (resp) => {
