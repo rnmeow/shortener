@@ -13,20 +13,20 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>URL Shortener</title>
+    <title>A-MA.ZIP URL Shortener</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A URL shortener, created by Connor." />
     <meta name="author" content="Connor Kuo" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:creator" content="@guo_huan91271" />
-    <meta property="og:title" content="URL Shortener" />
+    <meta property="og:title" content="A-MA.ZIP URL Shortener" />
     <meta
       property="og:description"
       content="A URL shortener, created by Connor."
     />
     <meta property="og:url" content="${new URL(baseUrl).href}" />
-    <meta property="og:site_name" content="URL Shortener" />
+    <meta property="og:site_name" content="A-MA.ZIP URL Shortener" />
     <meta property="og:type" content="website" />
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/lib/pico-2.0.6.min.css" />
@@ -35,14 +35,13 @@ export const handlers = factory.createHandlers(logger(), (ctxt) =>
     <div style="display: flex; min-height: 100vh; align-items: center">
       <main class="container" x-data="shortenerData">
         <header>
-          <h1>URL Shortener</h1>
+          <h1>A-MA.ZIP URL Shortener</h1>
         </header>
 
         <form @submit="onSubmit">
           <label for="destination">
             Long URL <span style="color: var(--pico-del-color)">*</span>
           </label>
-
           <input
             type="url"
             name="destination"
