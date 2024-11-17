@@ -1,60 +1,44 @@
 import { createMiddleware } from 'hono/factory'
 
-import { config } from '@/config'
 import { createRfcHttpError } from '@/errors/http_error'
 
-async function sha256Hash(str: string): Promise<string> {
-  const utf8Str = new TextEncoder().encode(str)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', utf8Str)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  const hashHex = hashArray
-    .map((bytes) => bytes.toString(16).padStart(2, '0'))
-    .join('')
-
-  return hashHex
-}
-
 const middleware = createMiddleware<{
-  Bindings: { _53CR37: string; _53CR37_GUEST: string }
+  Bindings: { TURNSTILE_53CR37: string }
 }>(async (ctxt, next) => {
   await next()
 
-  const authHeader = ctxt.req.header('Authentication')
+  const token = ctxt.req.header('IMPORTANT-NO-OVERWRITE-CF-Turnstile-Response')
+  const ip = ctxt.req.header('CF-Connecting-IP') ?? '255.255.255.0'
 
-  if (!authHeader) {
-    throw createRfcHttpError(401, 'Authentication header is required')
+  if (!token) {
+    throw createRfcHttpError(400, 'Missing Turnstile token. Skipped CAPTCHA?')
   }
-  if (!/^Bearer \S+$/g.test(authHeader)) {
-    throw createRfcHttpError(
-      401,
-      'Authentication header must start with `Bearer `',
-    )
+  if (!ip) {
+    throw createRfcHttpError(400, 'Missing origin IP')
   }
 
-  const token = authHeader.slice(7)
-  const tokenParts = token.split(':')
-
-  const isGuest = tokenParts[2] && tokenParts[2] === 'guest'
-
-  const then = parseInt(tokenParts[0]),
-    now = Math.floor(+new Date() / 1000)
-
-  const tokenAvailDays = isGuest
-    ? config.guestTokenAvailDays
-    : config.ultimateTokenAvailDays
-
-  if (then > now) {
-    throw createRfcHttpError(401, 'Are you a time traveler?')
-  }
-  if (then + tokenAvailDays * 86400 < now) {
-    throw createRfcHttpError(401, 'Token expired')
+  const payload = {
+    secret: ctxt.env.TURNSTILE_53CR37,
+    response: token,
+    remoteip: ip,
   }
 
-  const secret = isGuest ? ctxt.env._53CR37_GUEST : ctxt.env._53CR37
-  const magicalStrHash = await sha256Hash(`${tokenParts[0]}_${secret}`)
+  const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 
-  if (magicalStrHash !== tokenParts[1]) {
-    throw createRfcHttpError(401, 'Token invalid')
+  const { success } = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+  }).then((resp) =>
+    resp.json<{
+      success: boolean
+    }>(),
+  )
+
+  if (!success) {
+    throw createRfcHttpError(401, 'Authentication failed')
   }
 })
 

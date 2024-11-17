@@ -21,7 +21,7 @@ const isSlugTaken = (db: D1Database, slug: string) =>
 const { randSlugSize, baseUrl } = config
 
 const handlers = factory.createHandlers(logger(), async (ctxt) => {
-  const body = await (ctxt.req.json() satisfies Promise<ReqData>)
+  const body = await ctxt.req.json<ReqData>()
 
   if (!body.destination) {
     throw createRfcHttpError(400, 'Destination is required')

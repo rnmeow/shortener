@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>A-má Compressed</title>
+    <title>A-má Zipped</title>
 
     <meta
       name="viewport"
@@ -20,6 +20,10 @@
     <meta property="og:url" content="https://a-ma.zip" />
     <meta property="og:site_name" content="A-má Zipped" />
     <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://challenges.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
+
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/lib/pico-2.0.6.min.css" />
   </head>
@@ -33,19 +37,20 @@
         </header>
 
         <form @submit="onSubmit">
-          <label for="destination">
-            Long URL <span style="color: var(--pico-del-color)">*</span>
-          </label>
-          <input
-            type="url"
-            name="destination"
-            placeholder="https://example.com/~4n/3x7reMe1Y-LOng/uRl?eV3N=w1TH&P4RamS"
-            required
-          />
-
-          <div class="grid">
+          <fieldset class="grid">
             <div>
-              <label for="auth-token">
+              <label for="destination">
+                Long URL <span style="color: var(--pico-del-color)">*</span>
+              </label>
+              <input
+                type="url"
+                name="destination"
+                placeholder="https://example.com/~4n/3x7reMe1Y-LOng/uRl?eV3N=w1TH&P4RamS"
+                required
+              />
+            </div>
+
+            <!-- <label for="auth-token">
                 Auth Token <span style="color: var(--pico-del-color)">*</span>
               </label>
               <input
@@ -53,8 +58,7 @@
                 name="auth-token"
                 placeholder="%unixTimeNow%:SHA256(%unixTimeNow%_%secret%)"
                 required
-              />
-            </div>
+              /> -->
             <div>
               <label for="slug">Slug</label>
               <input
@@ -63,33 +67,51 @@
                 placeholder="[a-zA-Z0-9_-]{3,64}"
               />
             </div>
-          </div>
+            <div>
+              <label for="cf-turnstile"
+                >CAPTCHA
+                <span style="color: var(--pico-del-color)">*</span></label
+              >
+              <div
+                class="cf-turnstile"
+                name="cf-turnstile"
+                data-sitekey="0x4AAAAAAA0O-AGeaB-kAp-6"
+                data-language="en"
+                data-size="flexible"
+              ></div>
+            </div>
+          </fieldset>
 
           <button type="submit" class="contrast">Shorten!</button>
         </form>
 
-        <p x-show="res">
-          <span style="color: var(--pico-ins-color)">Successfully</span>
-          shortened! The shortened URL is:
-          <a x-bind:href="res?.shortenedUrl" x-text="res?.shortenedUrl"></a>
-        </p>
-
-        <p x-show="err">
-          <span style="color: var(--pico-del-color)">HTTP Error</span>
-          <span x-text="err?.code"></span>:
-          <span x-text="err?.detail"></span>
-        </p>
-
-        <p x-show="fat">
-          <span style="color: var(--pico-del-color)">FATAL</span>:
-          <span x-text="fat"></span>
+        <p x-show="err || res || fat">
+          <code x-show="err">
+            remote -&gt;
+            <span style="color: var(--pico-del-color)"
+              >HTTP Error <span x-text="err?.code"></span
+            ></span>
+            -- <span x-text="err?.detail"></span
+          ></code>
+          <code x-show="res">
+            remote -&gt;
+            <span style="color: var(--pico-ins-color)"
+              >Successfully shortened!</span
+            >
+            The shortened URL is:
+            <a x-bind:href="res?.shortenedUrl" x-text="res?.shortenedUrl"></a
+          ></code>
+          <code x-show="fat">
+            remote -&gt;
+            <span style="color: var(--pico-del-color)">FATAL</span> --
+            <span x-text="fat"></span
+          ></code>
         </p>
 
         <footer>&copy; 2024, Connor Kuo.</footer>
       </main>
     </div>
 
-    <script src="/lib/alpinejs-3.14.3.min.js" defer></script>
     <script>
       const shortenerData = {
         res: null,
@@ -99,8 +121,7 @@
         onSubmit(event) {
           event.preventDefault()
 
-          const form = event.target
-          const formData = new FormData(form)
+          const formData = new FormData(event.target)
 
           const payload = {
             destination: formData.get('destination'),
@@ -112,7 +133,9 @@
             body: JSON.stringify(payload),
             headers: new Headers({
               'Content-Type': 'application/json',
-              'Authentication': `Bearer ${formData.get('auth-token')}`,
+              'IMPORTANT-NO-OVERWRITE-CF-Turnstile-Response': formData.get(
+                'cf-turnstile-response',
+              ),
             }),
           })
             .then(async (resp) => {
@@ -140,5 +163,12 @@
         },
       }
     </script>
+
+    <script src="/lib/alpinejs-3.14.3.min.js" async defer></script>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+    ></script>
   </body>
 </html>
