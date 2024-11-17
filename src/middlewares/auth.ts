@@ -8,7 +8,7 @@ const middleware = createMiddleware<{
   await next()
 
   const token = ctxt.req.header('IMPORTANT-NO-OVERWRITE-CF-Turnstile-Response')
-  const ip = ctxt.req.header('CF-Connecting-IP') ?? '255.255.255.0'
+  const ip = ctxt.req.header('CF-Connecting-IP')
 
   if (!token) {
     throw createRfcHttpError(400, 'Missing Turnstile token. Skipped CAPTCHA?')
