@@ -43,6 +43,9 @@ const middleware = createMiddleware<{
     ? config.guestTokenAvailDays
     : config.ultimateTokenAvailDays
 
+  if (then > now) {
+    throw createRfcHttpError(401, 'Are you a time traveler?')
+  }
   if (then + tokenAvailDays * 86400 < now) {
     throw createRfcHttpError(401, 'Token expired')
   }
