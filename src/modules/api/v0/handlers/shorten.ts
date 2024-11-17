@@ -53,6 +53,7 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
     }
   } else if (
     slug === 'api' ||
+    slug === 'lib' ||
     (await isSlugTaken(db, slug)).results.length !== 0
   ) {
     throw createRfcHttpError(400, `Slug \`${slug}\` is already in use`)
