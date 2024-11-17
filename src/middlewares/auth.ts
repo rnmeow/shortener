@@ -14,38 +14,45 @@ async function sha256Hash(str: string): Promise<string> {
   return hashHex
 }
 
-const middleware = createMiddleware<{ Bindings: { _53CR37: string } }>(
-  async (ctxt, next) => {
-    await next()
+const middleware = createMiddleware<{
+  Bindings: { _53CR37: string; _53CR37_GUEST: string }
+}>(async (ctxt, next) => {
+  await next()
 
-    const authHeader = ctxt.req.header('Authentication')
+  const authHeader = ctxt.req.header('Authentication')
 
-    if (!authHeader) {
-      throw createRfcHttpError(401, 'Authentication header is required')
-    }
-    if (!/^Bearer \S+$/g.test(authHeader)) {
-      throw createRfcHttpError(
-        401,
-        'Authentication header must start with `Bearer `',
-      )
-    }
-
-    const token = authHeader.slice(7)
-    const tokenParts = token.split(':')
-
-    const then = parseInt(tokenParts[0]),
-      now = Math.floor(+new Date() / 1000)
-    if (then + config.tokenAvailDays * 86400 < now) {
-      throw createRfcHttpError(401, 'Token expired')
-    }
-
-    const magicalStrHash = await sha256Hash(
-      `${tokenParts[0]}_${ctxt.env._53CR37}`,
+  if (!authHeader) {
+    throw createRfcHttpError(401, 'Authentication header is required')
+  }
+  if (!/^Bearer \S+$/g.test(authHeader)) {
+    throw createRfcHttpError(
+      401,
+      'Authentication header must start with `Bearer `',
     )
-    if (magicalStrHash !== tokenParts[1]) {
-      throw createRfcHttpError(401, 'Token invalid')
-    }
-  },
-)
+  }
+
+  const token = authHeader.slice(7)
+  const tokenParts = token.split(':')
+
+  const isGuest = tokenParts[2] && tokenParts[2] === 'guest'
+
+  const then = parseInt(tokenParts[0]),
+    now = Math.floor(+new Date() / 1000)
+
+  const tokenAvailDays = isGuest
+    ? config.guestTokenAvailDays
+    : config.ultimateTokenAvailDays
+
+  if (then + tokenAvailDays * 86400 < now) {
+    throw createRfcHttpError(401, 'Token expired')
+  }
+
+  const secret = isGuest ? ctxt.env._53CR37_GUEST : ctxt.env._53CR37
+  const magicalStrHash = await sha256Hash(`${tokenParts[0]}_${secret}`)
+
+  if (magicalStrHash !== tokenParts[1]) {
+    throw createRfcHttpError(401, 'Token invalid')
+  }
+})
 
 export { middleware }

@@ -1,5 +1,6 @@
 export interface AppConfig {
   baseUrl: string
   randSlugSize: number
-  tokenAvailDays: number
+  guestTokenAvailDays?: number
+  ultimateTokenAvailDays: number
 }
