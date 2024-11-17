@@ -124,7 +124,7 @@
         onSubmit(event) {
           event.preventDefault()
 
-          respProcessing = !respProcessing
+          this.respProcessing = true
 
           const formData = new FormData(event.target)
 
@@ -167,8 +167,6 @@
             })
 
           turnstile.reset('.cf-turnstile')
-
-          respProcessing = !respProcessing
         },
       }
     </script>
