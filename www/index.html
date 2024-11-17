@@ -1,20 +1,4 @@
-import { createFactory } from 'hono/factory'
-import { html } from 'hono/html'
-import { logger } from 'hono/logger'
-
-import { middleware as methodRestrMiddleware } from '@/middlewares/method_restrict'
-
-import { baseUrl } from '@/conf'
-
-const factory = createFactory()
-
-export const handlers = factory.createHandlers(
-  logger(),
-  methodRestrMiddleware(['GET']),
-  (ctxt) =>
-    ctxt.html(
-      // prettier-ignore
-      html`<!doctype html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -118,12 +102,12 @@ export const handlers = factory.createHandlers(
             slug: formData.get('slug'),
           }
 
-          fetch('/api/shorten', {
+          fetch('/api/v0/shorten', {
             method: 'PUT',
             body: JSON.stringify(payload),
             headers: new Headers({
               'Content-Type': 'application/json',
-              'Authentication': 'Bearer ' + formData.get('auth-token'),
+              'Authentication': `Bearer ${formData.get('auth-token')}`,
             }),
           })
             .then(async (resp) => {
@@ -153,6 +137,3 @@ export const handlers = factory.createHandlers(
     </script>
   </body>
 </html>
-`,
-    ),
-)

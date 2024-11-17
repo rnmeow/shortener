@@ -2,7 +2,7 @@ import { createMiddleware } from 'hono/factory'
 
 import { createRfcHttpError } from '@/errors/http_error'
 
-export const middleware = (expMethods: string[]) =>
+const middleware = (expMethods: string[]) =>
   createMiddleware(async (ctxt, next) => {
     await next()
 
@@ -18,3 +18,5 @@ export const middleware = (expMethods: string[]) =>
       )
     }
   })
+
+export { middleware }

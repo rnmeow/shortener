@@ -6,7 +6,7 @@ import { createRfcHttpError } from '@/errors/http_error'
 
 const factory = createFactory<{ Bindings: { DB: D1Database } }>()
 
-export const handlers = factory.createHandlers(
+const handlers = factory.createHandlers(
   logger(),
   cache({
     cacheName: '_shortened_url',
@@ -42,3 +42,5 @@ export const handlers = factory.createHandlers(
     })
   },
 )
+
+export { handlers }

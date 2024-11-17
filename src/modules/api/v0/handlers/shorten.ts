@@ -3,10 +3,10 @@ import { logger } from 'hono/logger'
 
 import { nanoid } from 'nanoid/non-secure'
 
-import { baseUrl, randSlugSize } from '@/conf'
+import { config } from '@/config'
 import { createRfcHttpError } from '@/errors/http_error'
 
-import type { JsonResp } from '@/http_resp.d'
+import type { JsonResp } from '@/types/http_resp'
 
 type ReqData = {
   slug?: string
@@ -18,7 +18,9 @@ const factory = createFactory<{ Bindings: { DB: D1Database } }>()
 const isSlugTaken = (db: D1Database, slug: string) =>
   db.prepare(`SELECT slug FROM URLs WHERE slug = ?;`).bind(slug).all()
 
-export const handlers = factory.createHandlers(logger(), async (ctxt) => {
+const { randSlugSize, baseUrl } = config
+
+const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const body = await (ctxt.req.json() satisfies Promise<ReqData>)
 
   if (!body.destination) {
@@ -78,3 +80,5 @@ export const handlers = factory.createHandlers(logger(), async (ctxt) => {
     shortenedUrl: new URL(slug, baseUrl).href,
   })
 })
+
+export { handlers }

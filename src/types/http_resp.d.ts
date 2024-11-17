@@ -1,4 +1,4 @@
-export type JsonResp = {
+export interface JsonResp {
   timestamp: number
   version: number
   status: string

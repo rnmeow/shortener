@@ -19,12 +19,11 @@ import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { TrieRouter } from 'hono/router/trie-router'
 
-import { handlers as redirectHandlers } from '@/routes/[slug]'
-import { handlers as webpageHandlers } from '@/routes/webpage'
-
 import { middleware as rateLimitMiddleware } from '@/middlewares/rate_limit'
 
-import { api } from '@/api'
+import { routes as slugRoutes } from '@/modules/[slug]/routes'
+import { routes as apiRoutes } from '@/modules/api/compatibility_routes'
+
 import { createRfcHttpError } from '@/errors/http_error'
 
 const app = new Hono({
@@ -32,13 +31,17 @@ const app = new Hono({
   router: new TrieRouter(),
 })
 
+/**
+ * Routes
+ */
+
 app.use(rateLimitMiddleware)
 
-app.all('/', ...webpageHandlers)
+app.route('/', slugRoutes).route('/api', apiRoutes)
 
-app.get('/:slug{[a-zA-Z0-9_-]{3,64}}', ...redirectHandlers)
-
-app.route('/api', api)
+/**
+ * Error Handling
+ */
 
 app.notFound(() => {
   throw createRfcHttpError(

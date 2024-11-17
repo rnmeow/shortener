@@ -2,7 +2,7 @@ import { createMiddleware } from 'hono/factory'
 
 import { createRfcHttpError } from '@/errors/http_error'
 
-export const middleware = createMiddleware(async (ctxt, next) => {
+const middleware = createMiddleware(async (ctxt, next) => {
   await next()
 
   const { success } = await ctxt.env.RATE_LIMITER.limit({
@@ -13,3 +13,5 @@ export const middleware = createMiddleware(async (ctxt, next) => {
     throw createRfcHttpError(429, "Isn't this many requests excessive?")
   }
 })
+
+export { middleware }

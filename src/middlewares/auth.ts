@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory'
 
-import { tokenAvailDays } from '@/conf'
+import { config } from '@/config'
 import { createRfcHttpError } from '@/errors/http_error'
 
 async function sha256Hash(str: string): Promise<string> {
@@ -14,7 +14,7 @@ async function sha256Hash(str: string): Promise<string> {
   return hashHex
 }
 
-export const middleware = createMiddleware<{ Bindings: { _53CR37: string } }>(
+const middleware = createMiddleware<{ Bindings: { _53CR37: string } }>(
   async (ctxt, next) => {
     await next()
 
@@ -35,7 +35,7 @@ export const middleware = createMiddleware<{ Bindings: { _53CR37: string } }>(
 
     const then = parseInt(tokenParts[0]),
       now = Math.floor(+new Date() / 1000)
-    if (then + tokenAvailDays * 86400 < now) {
+    if (then + config.tokenAvailDays * 86400 < now) {
       throw createRfcHttpError(401, 'Token expired')
     }
 
@@ -47,3 +47,5 @@ export const middleware = createMiddleware<{ Bindings: { _53CR37: string } }>(
     }
   },
 )
+
+export { middleware }
