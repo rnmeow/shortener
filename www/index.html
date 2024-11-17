@@ -77,32 +77,28 @@
         </form>
 
         <p x-show="respProcessing">
-          <code x-show="!(err || res || fat)">
-            remote -&gt; Processing your request, please wait...
-          </code>
-          <code x-show="err">
+          <code>
             remote -&gt;
-            <span style="color: var(--pico-del-color)"
-              >HTTP Error <span x-text="err?.code"></span
-            ></span>
-            -- <span x-text="err?.detail"></span
-          ></code>
-          <code x-show="res">
-            remote -&gt;
-            <span style="color: var(--pico-ins-color)"
-              >Successfully shortened!</span
-            >
-            The shortened URL is:
-            <a
-              x-bind:href="res?.shortenedUrl"
-              x-text="res?.shortenedUrl"
-              target="_blank"
-            ></a
-          ></code>
-          <code x-show="fat">
-            remote -&gt;
-            <span style="color: var(--pico-del-color)">FATAL</span> --
-            <span x-text="fat"></span
+            <span x-show="!(err || res || fat)"
+              >Processing your request, please wait...</span
+            ><span x-show="err"
+              ><span style="color: var(--pico-del-color)"
+                >HTTP Error <span x-text="err?.code"></span
+              ></span>
+              -- <span x-text="err?.detail"></span></span
+            ><span x-show="res"
+              ><span style="color: var(--pico-ins-color)"
+                >Successfully shortened!</span
+              >
+              The shortened URL is:
+              <a
+                x-bind:href="res?.shortenedUrl"
+                x-text="res?.shortenedUrl"
+                target="_blank"
+              ></a></span
+            ><span x-show="fat"
+              ><span style="color: var(--pico-del-color)">FATAL</span> --
+              <span x-text="fat"></span></span
           ></code>
         </p>
 
