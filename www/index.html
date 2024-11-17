@@ -99,7 +99,11 @@
               >Successfully shortened!</span
             >
             The shortened URL is:
-            <a x-bind:href="res?.shortenedUrl" x-text="res?.shortenedUrl"></a
+            <a
+              x-bind:href="res?.shortenedUrl"
+              x-text="res?.shortenedUrl"
+              target="_blank"
+            ></a
           ></code>
           <code x-show="fat">
             remote -&gt;
