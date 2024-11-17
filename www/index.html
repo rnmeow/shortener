@@ -76,7 +76,14 @@
           <button type="submit" class="contrast">Shorten!</button>
         </form>
 
-        <p x-show="err || res || fat">
+        <p x-show="respProcessing">
+          <code x-hide="err || res || fat">
+            remote -&gt;
+            <span style="color: var(--pico-primary)"
+              >Processing your request,</span
+            >
+            please wait...
+          </code>
           <code x-show="err">
             remote -&gt;
             <span style="color: var(--pico-del-color)"
@@ -109,12 +116,15 @@
 
     <script>
       const shortenerData = {
+        respProcessing: false,
         res: null,
         err: null,
         fat: null,
 
         onSubmit(event) {
           event.preventDefault()
+
+          respProcessing = !respProcessing
 
           const formData = new FormData(event.target)
 
@@ -155,6 +165,8 @@
               this.err = null
               this.fat = err
             })
+
+          respProcessing = !respProcessing
         },
       }
     </script>
