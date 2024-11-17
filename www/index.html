@@ -77,12 +77,8 @@
         </form>
 
         <p x-show="respProcessing">
-          <code x-hide="err || res || fat">
-            remote -&gt;
-            <span style="color: var(--pico-primary)"
-              >Processing your request,</span
-            >
-            please wait...
+          <code x-show="!(err || res || fat)">
+            remote -&gt; Processing your request, please wait...
           </code>
           <code x-show="err">
             remote -&gt;
