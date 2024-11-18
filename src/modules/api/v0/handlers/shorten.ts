@@ -18,7 +18,7 @@ const factory = createFactory<{ Bindings: { DB: D1Database } }>()
 const isSlugTaken = (db: D1Database, slug: string) =>
   db.prepare(`SELECT slug FROM URLs WHERE slug = ?;`).bind(slug).all()
 
-const { randSlugSize, baseUrl } = config
+const { hostnamesBanned, randSlugSize, baseUrl } = config
 
 const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const body = await ctxt.req.json<ReqData>()
@@ -29,12 +29,42 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
   if (typeof body.destination !== 'string') {
     throw createRfcHttpError(400, 'Destination must be a string')
   }
-  if (
-    !/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9-()]{1,63}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)$/g.test(
-      body.destination,
+  if (body.destination.length <= 20) {
+    throw createRfcHttpError(
+      400,
+      'Destination is already short, just like your _____',
     )
-  ) {
+  }
+
+  let destUrl: URL
+  try {
+    destUrl = new URL(body.destination)
+  } catch (_err) {
     throw createRfcHttpError(400, 'Destination must be a valid URL')
+  }
+
+  if (destUrl.protocol !== 'https:') {
+    throw createRfcHttpError(400, 'Destination must be an HTTPS site')
+  }
+  if (
+    hostnamesBanned.has(destUrl.hostname) ||
+    baseUrl.origin === destUrl.origin
+  ) {
+    throw createRfcHttpError(
+      400,
+      'Destination hostname is banned or unavailable',
+    )
+  }
+
+  const { ok, status } = await fetch(destUrl, {
+    method: 'GET',
+  })
+
+  if (!ok) {
+    throw createRfcHttpError(400, 'Destination URL is not accessible')
+  }
+  if ([301, 302, 303, 307, 308].includes(status)) {
+    throw createRfcHttpError(400, 'Destination URL redirects are not allowed')
   }
 
   if (body.slug && typeof body.slug !== 'string') {

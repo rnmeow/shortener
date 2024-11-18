@@ -15,7 +15,7 @@ const handlers = factory.createHandlers(
   async (ctxt) => {
     const db = ctxt.env.DB
 
-    // should've been checked in route with regexp
+    // should've been checked in routes.ts with regexp
     const { slug } = ctxt.req.param()
 
     const { success, results } = await db

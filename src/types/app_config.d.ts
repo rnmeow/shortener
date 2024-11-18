@@ -1,6 +1,5 @@
 export interface AppConfig {
-  baseUrl: string
+  baseUrl: URL
   randSlugSize: number
-  guestTokenAvailDays?: number
-  ultimateTokenAvailDays: number
+  hostnamesBanned: Set<string>
 }

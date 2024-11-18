@@ -1,10 +1,9 @@
 import { AppConfig } from '@/types/app_config'
 
 const config = {
-  baseUrl: 'https://a-ma.zip',
+  baseUrl: new URL('https://a-ma.zip/'),
   randSlugSize: 5,
-  guestTokenAvailDays: 7,
-  ultimateTokenAvailDays: 365,
+  hostnamesBanned: new Set(['s.shopee.tw', 'localhost', 'loopback']),
 } satisfies AppConfig
 
 export { config }
