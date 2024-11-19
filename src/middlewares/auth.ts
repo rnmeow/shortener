@@ -13,7 +13,10 @@ const middleware = createMiddleware<{
   if (!token) {
     throw createRfcHttpError(400, 'Missing Turnstile token. Skipped CAPTCHA?')
   }
-  if (!ip) {
+  if (
+    !ip &&
+    ctxt.env.TURNSTILE_53CR37 !== '1x0000000000000000000000000000000AA'
+  ) {
     throw createRfcHttpError(400, 'Missing origin IP')
   }
 
