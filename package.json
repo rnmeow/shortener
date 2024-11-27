@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "hono": "^4.6.10",
-    "nanoid": "^5.0.8"
+    "nanoid": "^5.0.9"
   }
 }
