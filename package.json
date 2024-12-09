@@ -23,7 +23,7 @@
     "wrangler": "^3.87.0"
   },
   "dependencies": {
-    "hono": "^4.6.10",
+    "hono": "^4.6.13",
     "nanoid": "^5.0.8"
   }
 }
