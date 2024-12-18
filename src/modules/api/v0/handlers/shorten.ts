@@ -56,17 +56,6 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
     )
   }
 
-  const { ok, status } = await fetch(destUrl, {
-    method: 'GET',
-  })
-
-  if (!ok) {
-    throw createRfcHttpError(400, 'Destination URL is not accessible')
-  }
-  if ([301, 302, 303, 307, 308].includes(status)) {
-    throw createRfcHttpError(400, 'Destination URL redirects are not allowed')
-  }
-
   if (body.slug && typeof body.slug !== 'string') {
     throw createRfcHttpError(400, 'Slug must be a string')
   }
