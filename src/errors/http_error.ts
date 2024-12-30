@@ -1,5 +1,5 @@
 import { HTTPException } from 'hono/http-exception'
-import type { StatusCode } from 'hono/utils/http-status'
+import type { ContentfulStatusCode } from 'hono/utils/http-status'
 
 const httpStatusMap = new Map<
   number,
@@ -65,15 +65,17 @@ const httpStatusMap = new Map<
 ])
 
 function createRfcHttpError(
-  code: StatusCode,
+  code: ContentfulStatusCode,
   detail: string,
   customHeaders?: Record<string, string>,
 ): HTTPException {
   const match = httpStatusMap.get(code)
 
-  const title = match?.title ?? 'UNKNOWN ERROR',
+  const title = match?.title ?? 'Unknown Error',
     rfc6585 = match?.rfc6585 ?? false,
-    refSection = match?.refSection ?? ''
+    refSection =
+      match?.refSection ??
+      'Please contact the administrator to resolve this issue.'
 
   const payload = {
     code,
