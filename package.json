@@ -18,12 +18,12 @@
     "deploy": "wrangler deploy --minify"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241112.0",
-    "prettier": "^3.3.3",
-    "wrangler": "^3.87.0"
+    "@cloudflare/workers-types": "^4.20241224.0",
+    "prettier": "^3.4.2",
+    "wrangler": "^3.99.0"
   },
   "dependencies": {
-    "hono": "^4.6.10",
-    "nanoid": "^5.0.8"
+    "hono": "^4.6.15",
+    "nanoid": "^5.0.9"
   }
 }
