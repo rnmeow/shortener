@@ -14,16 +14,26 @@
   "scripts": {
     "format": "prettier ./src -w",
     "format:check": "prettier ./src -c",
-    "dev": "wrangler dev --live-reload",
+    "gensql": "drizzle-kit generate",
+    "dev": "nitro dev",
+    "build": "nitro build",
+    "prepare": "nitro prepare",
+    "preview": "wrangler dev",
     "deploy": "wrangler deploy --minify"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241224.0",
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "@rollup/plugin-alias": "^5.1.1",
+    "drizzle-kit": "^0.30.2",
+    "nitro-cloudflare-dev": "^0.2.1",
+    "nitropack": "^2.10.4",
     "prettier": "^3.4.2",
-    "wrangler": "^3.99.0"
+    "wrangler": "^3.103.2"
   },
   "dependencies": {
-    "hono": "^4.6.15",
+    "drizzle-orm": "^0.38.4",
+    "h3": "^1.13.1",
     "nanoid": "^5.0.9"
-  }
+  },
+  "packageManager": "pnpm@9.1.4+sha1.2432063d815cfa88fd9fef1d85a445e3f609851d"
 }

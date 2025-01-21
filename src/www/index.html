@@ -89,7 +89,7 @@
               ><span style="color: var(--pico-del-color)"
                 >HTTP Error <span x-text="err?.code"></span
               ></span>
-              -- <span x-text="err?.detail"></span></span
+              -- <span x-text="err?.message"></span></span
             ><span x-show="res"
               ><span style="color: var(--pico-ins-color)"
                 >Successfully shortened!</span
@@ -131,8 +131,11 @@
           const formData = new FormData(event.target)
 
           const payload = {
-            destination: formData.get('destination'),
-            slug: formData.get('slug'),
+            'destination': formData.get('destination'),
+            'slug': formData.get('slug'),
+            'IMPORTANT-NO-OVERWRITE-CF-Turnstile-Response': formData.get(
+              'cf-turnstile-response',
+            ),
           }
 
           fetch('/api/v0/shorten', {
@@ -140,23 +143,16 @@
             body: JSON.stringify(payload),
             headers: new Headers({
               'Content-Type': 'application/json',
-              'IMPORTANT-NO-OVERWRITE-CF-Turnstile-Response': formData.get(
-                'cf-turnstile-response',
-              ),
             }),
           })
             .then(async (resp) => {
               const data = await resp.json()
-              const dataType = resp.headers.get('Content-Type')
 
-              if (dataType && dataType.includes('application/json')) {
+              if (data && resp.ok) {
                 this.res = data
                 this.err = null
                 this.fat = null
-              } else if (
-                dataType &&
-                dataType.includes('application/problem+json')
-              ) {
+              } else if (data && !resp.ok) {
                 this.res = null
                 this.err = data
                 this.fat = null

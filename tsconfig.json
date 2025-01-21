@@ -1,4 +1,6 @@
+// https://nitro.unjs.io/guide/typescript
 {
+  "extends": "./.nitro/types/tsconfig.json",
   "compilerOptions": {
     "strict": true,
     "skipLibCheck": true,
@@ -6,8 +8,6 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
     "types": ["@cloudflare/workers-types"],
     "baseUrl": ".",
     "paths": {

@@ -6,6 +6,11 @@ npm-debug.log*
 
 .wrangler
 node_modules
+dist
 
+.data
+.nitro
+.cache
+.output
 .dev.vars
 .env*

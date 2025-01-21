@@ -1,10 +1,11 @@
 name = "shortener"
-main = "src/app.ts"
-compatibility_date = "2024-11-12"
+main = "./.output/server/index.mjs"
 
+compatibility_date = "2025-01-20"
+compatibility_flags = ["nodejs_compat"]
+
+assets = { directory = "./.output/public/", binding = "ASSETS" }
 routes = [{ pattern = "a-ma.zip", custom_domain = true }]
-
-assets = { directory = "./www/", binding = "ASSETS" }
 
 [observability]
 enabled = true
@@ -20,3 +21,5 @@ simple = { limit = 50, period = 60 }
 binding = "DB"
 database_name = "url-shortner-db"
 database_id = "83e2a789-0639-4e3b-b2e3-545deb75a421"
+
+migrations_dir = "./drizzle"
