@@ -1,5 +1,9 @@
-import { HTTPException } from 'hono/http-exception'
-import type { ContentfulStatusCode } from 'hono/utils/http-status'
+import {
+  createError,
+  type EventHandlerRequest,
+  type H3Event,
+  type StatusCode,
+} from 'h3'
 
 const httpStatusMap = new Map<
   number,
@@ -65,10 +69,11 @@ const httpStatusMap = new Map<
 ])
 
 function createRfcHttpError(
-  code: ContentfulStatusCode,
+  event: H3Event<EventHandlerRequest>,
+  code: StatusCode,
   detail: string,
   customHeaders?: Record<string, string>,
-): HTTPException {
+) {
   const match = httpStatusMap.get(code)
 
   const title = match?.title ?? 'Unknown Error',
@@ -77,25 +82,21 @@ function createRfcHttpError(
       match?.refSection ??
       'Please contact the administrator to resolve this issue.'
 
-  const payload = {
-    code,
-    title,
-    type: rfc6585
-      ? `https://datatracker.ietf.org/doc/html/rfc6585#${refSection}`
-      : `https://datatracker.ietf.org/doc/html/rfc9110#${refSection}`,
-    detail: `${detail} :(`,
-  }
-
-  const headers = new Headers({
+  setResponseHeaders(event, {
     'Content-Type': 'application/problem+json; charset=utf-8',
     'Cache-Control': 'max-age=0, no-store, must-revalidate',
     ...customHeaders,
   })
 
-  return new HTTPException(code, {
-    res: new Response(JSON.stringify(payload), {
-      headers,
-    }),
+  throw createError({
+    status: code,
+    statusMessage: title,
+    data: {
+      type: rfc6585
+        ? `https://datatracker.ietf.org/doc/html/rfc6585#${refSection}`
+        : `https://datatracker.ietf.org/doc/html/rfc9110#${refSection}`,
+    },
+    message: `${detail} :(`,
   })
 }
 
