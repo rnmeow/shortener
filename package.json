@@ -22,7 +22,7 @@
     "deploy": "wrangler deploy --minify"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250109.0",
+    "@cloudflare/workers-types": "^4.20250124.3",
     "@rollup/plugin-alias": "^5.1.1",
     "drizzle-kit": "^0.30.2",
     "nitro-cloudflare-dev": "^0.2.1",
