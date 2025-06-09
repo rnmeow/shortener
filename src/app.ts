@@ -15,16 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Hono } from 'hono'
-import { HTTPException } from 'hono/http-exception'
-import { TrieRouter } from 'hono/router/trie-router'
+import { Hono } from "hono"
+import { HTTPException } from "hono/http-exception"
+import { TrieRouter } from "hono/router/trie-router"
 
-import { middleware as rateLimitMiddleware } from '@/middlewares/rate_limit'
+import { middleware as rateLimitMiddleware } from "@/middlewares/rate_limit"
 
-import { routes as slugRoutes } from '@/modules/[slug]/routes'
-import { routes as apiRoutes } from '@/modules/api/compatibility_routes'
+import { routes as slugRoutes } from "@/modules/[slug]/routes"
+import { routes as apiRoutes } from "@/modules/api/compatibility_routes"
 
-import { createRfcHttpError } from '@/errors/http_error'
+import { createRfcHttpError } from "@/errors/http_error"
 
 const app = new Hono({
   strict: false,
@@ -37,7 +37,7 @@ const app = new Hono({
 
 app.use(rateLimitMiddleware)
 
-app.route('/', slugRoutes).route('/api', apiRoutes)
+app.route("/", slugRoutes).route("/api", apiRoutes)
 
 /**
  * Error Handling
@@ -46,7 +46,7 @@ app.route('/', slugRoutes).route('/api', apiRoutes)
 app.notFound(() => {
   throw createRfcHttpError(
     404,
-    'The requested page may have been removed or renamed',
+    "The requested page may have been removed or renamed",
   )
 })
 

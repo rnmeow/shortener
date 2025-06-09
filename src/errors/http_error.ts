@@ -1,5 +1,5 @@
-import { HTTPException } from 'hono/http-exception'
-import type { ContentfulStatusCode } from 'hono/utils/http-status'
+import { HTTPException } from "hono/http-exception"
+import type { ContentfulStatusCode } from "hono/utils/http-status"
 
 const httpStatusMap = new Map<
   number,
@@ -8,58 +8,58 @@ const httpStatusMap = new Map<
   [
     400,
     {
-      title: 'Bad Request',
-      refSection: 'section-15.5.1',
+      title: "Bad Request",
+      refSection: "section-15.5.1",
     },
   ],
   [
     401,
     {
-      title: 'Unauthorized',
-      refSection: 'section-15.5.2',
+      title: "Unauthorized",
+      refSection: "section-15.5.2",
     },
   ],
   [
     404,
     {
-      title: 'Not Found',
-      refSection: 'section-15.5.5',
+      title: "Not Found",
+      refSection: "section-15.5.5",
     },
   ],
   [
     405,
     {
-      title: 'Method Not Allowed',
-      refSection: 'section-15.5.6',
+      title: "Method Not Allowed",
+      refSection: "section-15.5.6",
     },
   ],
   [
     418,
     {
-      title: '(Unused)',
-      refSection: 'section-15.5.19',
+      title: "(Unused)",
+      refSection: "section-15.5.19",
     },
   ],
   [
     429,
     {
-      title: 'Too Many Requests',
+      title: "Too Many Requests",
       rfc6585: true,
-      refSection: 'section-4',
+      refSection: "section-4",
     },
   ],
   [
     500,
     {
-      title: 'Internal Server Error',
-      refSection: 'section-15.6.1',
+      title: "Internal Server Error",
+      refSection: "section-15.6.1",
     },
   ],
   [
     501,
     {
-      title: 'Not Implemented',
-      refSection: 'section-15.6.2',
+      title: "Not Implemented",
+      refSection: "section-15.6.2",
     },
   ],
 ])
@@ -71,11 +71,11 @@ function createRfcHttpError(
 ): HTTPException {
   const match = httpStatusMap.get(code)
 
-  const title = match?.title ?? 'Unknown Error',
+  const title = match?.title ?? "Unknown Error",
     rfc6585 = match?.rfc6585 ?? false,
     refSection =
       match?.refSection ??
-      'Please contact the administrator to resolve this issue.'
+      "Please contact the administrator to resolve this issue."
 
   const payload = {
     code,
@@ -87,8 +87,8 @@ function createRfcHttpError(
   }
 
   const headers = new Headers({
-    'Content-Type': 'application/problem+json; charset=utf-8',
-    'Cache-Control': 'max-age=0, no-store, must-revalidate',
+    "Content-Type": "application/problem+json; charset=utf-8",
+    "Cache-Control": "max-age=0, no-store, must-revalidate",
     ...customHeaders,
   })
 
