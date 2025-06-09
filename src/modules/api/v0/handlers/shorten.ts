@@ -13,14 +13,18 @@ type ReqData = {
   destination: string
 }
 
-const factory = createFactory<{ Bindings: { DB: D1Database } }>()
+const factory = createFactory<{
+  Bindings: { DB: D1Database; TURNSTILE_53CR37: string }
+}>()
 
 const isSlugTaken = (db: D1Database, slug: string) =>
   db.prepare(`SELECT slug FROM URLs WHERE slug = ?;`).bind(slug).all()
 
-const { hostnamesBanned, randSlugSize, baseUrl } = config
-
 const handlers = factory.createHandlers(logger(), async (ctxt) => {
+  const { hostnamesBanned, randSlugSize, baseUrl } = config(
+    ctxt.env.TURNSTILE_53CR37 === '1x0000000000000000000000000000000AA',
+  )
+
   const body = await ctxt.req.json<ReqData>()
 
   if (!body.destination) {

@@ -3,7 +3,7 @@
   "type": "module",
   "engines": {
     "node": "^18 || >=20",
-    "pnpm": "^9"
+    "pnpm": "^10"
   },
   "author": "Connor Kuo <touch@rnmeow.com>",
   "license": "AGPL-3.0-only",
