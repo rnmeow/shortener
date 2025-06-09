@@ -96,8 +96,8 @@
               >
               The shortened URL is:
               <a
-                x-bind:href="res?.shortenedUrl"
-                x-text="res?.shortenedUrl"
+                x-bind:href="new URL(new URL(res?.shortenedUrl).pathname, window.location.origin).href"
+                x-text="new URL(new URL(res?.shortenedUrl).pathname, window.location.origin).href"
                 target="_blank"
               ></a></span
             ><span x-show="fat"
