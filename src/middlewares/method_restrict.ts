@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory"
 
-import { createRfcHttpError } from "@/errors/http_error"
+import { formattedHttpError } from "@/errors/http_error"
 
 const middleware = (expMethods: string[]) =>
   createMiddleware(async (ctxt, next) => {
@@ -9,7 +9,7 @@ const middleware = (expMethods: string[]) =>
     const reqMethod = ctxt.req.method
 
     if (!expMethods.includes(reqMethod)) {
-      throw createRfcHttpError(
+      throw formattedHttpError(
         405,
         `This path doesn't support a/an \`${reqMethod}\` request`,
         {

@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory"
 
-import { createRfcHttpError } from "@/errors/http_error"
+import { formattedHttpError } from "@/errors/http_error"
 
 const middleware = createMiddleware(async (ctxt, next) => {
   await next()
@@ -10,7 +10,7 @@ const middleware = createMiddleware(async (ctxt, next) => {
   })
 
   if (!success) {
-    throw createRfcHttpError(429, "Isn't this many requests excessive?")
+    throw formattedHttpError(429, "Isn't this many requests excessive?")
   }
 })
 

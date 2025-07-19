@@ -24,7 +24,7 @@ import { middleware as rateLimitMiddleware } from "@/middlewares/rate_limit"
 import { routes as slugRoutes } from "@/modules/[slug]/routes"
 import { routes as apiRoutes } from "@/modules/api/compatibility_routes"
 
-import { createRfcHttpError } from "@/errors/http_error"
+import { formattedHttpError } from "@/errors/http_error"
 
 const app = new Hono({
   strict: false,
@@ -44,7 +44,7 @@ app.route("/", slugRoutes).route("/api", apiRoutes)
  */
 
 app.notFound(() => {
-  throw createRfcHttpError(
+  throw formattedHttpError(
     404,
     "The requested page may have been removed or renamed",
   )
@@ -55,7 +55,7 @@ app.onError((err, _ctxt) => {
     return err.getResponse()
   }
 
-  throw createRfcHttpError(500, `FATAL: ${err.message}`)
+  throw formattedHttpError(500, `FATAL: ${err.message}`)
 })
 
 export default app

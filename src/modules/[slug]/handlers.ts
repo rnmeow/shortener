@@ -2,7 +2,7 @@ import { cache } from "hono/cache"
 import { createFactory } from "hono/factory"
 import { logger } from "hono/logger"
 
-import { createRfcHttpError } from "@/errors/http_error"
+import { formattedHttpError } from "@/errors/http_error"
 
 const factory = createFactory<{ Bindings: { DB: D1Database } }>()
 
@@ -24,10 +24,10 @@ const handlers = factory.createHandlers(
       .all()
 
     if (!success || results.length > 1) {
-      throw createRfcHttpError(500, "Error reading data from the database")
+      throw formattedHttpError(500, "Error reading data from the database")
     }
     if (results.length === 0) {
-      throw createRfcHttpError(
+      throw formattedHttpError(
         404,
         "The requested page may have been removed or renamed",
       )

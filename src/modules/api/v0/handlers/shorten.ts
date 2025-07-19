@@ -4,7 +4,7 @@ import { logger } from "hono/logger"
 import { nanoid } from "nanoid/non-secure"
 
 import { config } from "@/config"
-import { createRfcHttpError } from "@/errors/http_error"
+import { formattedHttpError } from "@/errors/http_error"
 
 import type { JsonResp } from "@/types/http_resp"
 
@@ -28,13 +28,13 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const body = await ctxt.req.json<ReqData>()
 
   if (!body.destination) {
-    throw createRfcHttpError(400, "Destination is required")
+    throw formattedHttpError(400, "Destination is required")
   }
   if (typeof body.destination !== "string") {
-    throw createRfcHttpError(400, "Destination must be a string")
+    throw formattedHttpError(400, "Destination must be a string")
   }
   if (body.destination.length <= 20) {
-    throw createRfcHttpError(
+    throw formattedHttpError(
       400,
       "Destination is already short, just like your _____",
     )
@@ -44,27 +44,27 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
   try {
     destUrl = new URL(body.destination)
   } catch (_err) {
-    throw createRfcHttpError(400, "Destination must be a valid URL")
+    throw formattedHttpError(400, "Destination must be a valid URL")
   }
 
   if (destUrl.protocol !== "https:") {
-    throw createRfcHttpError(400, "Destination must be an HTTPS site")
+    throw formattedHttpError(400, "Destination must be an HTTPS site")
   }
   if (
     hostnamesBanned.has(destUrl.hostname) ||
     baseUrl.origin === destUrl.origin
   ) {
-    throw createRfcHttpError(
+    throw formattedHttpError(
       400,
       "Destination hostname is banned or unavailable",
     )
   }
 
   if (body.slug && typeof body.slug !== "string") {
-    throw createRfcHttpError(400, "Slug must be a string")
+    throw formattedHttpError(400, "Slug must be a string")
   }
   if (body.slug && !/^[a-zA-Z0-9_-]{3,64}$/g.test(body.slug)) {
-    throw createRfcHttpError(400, "Slug must be safe and 3–64 characters long")
+    throw formattedHttpError(400, "Slug must be safe and 3–64 characters long")
   }
 
   const db = ctxt.env.DB
@@ -79,7 +79,7 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
     slug === "lib" ||
     (await isSlugTaken(db, slug)).results.length !== 0
   ) {
-    throw createRfcHttpError(400, `Slug \`${slug}\` is already in use`)
+    throw formattedHttpError(400, `Slug \`${slug}\` is already in use`)
   }
 
   const { success } = await db
@@ -88,7 +88,7 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
     .run()
 
   if (!success) {
-    throw createRfcHttpError(500, "Error inserting data into the database")
+    throw formattedHttpError(500, "Error inserting data into the database")
   }
 
   return ctxt.json<

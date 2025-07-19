@@ -64,7 +64,7 @@ const httpStatusMap = new Map<
   ],
 ])
 
-function createRfcHttpError(
+function formattedHttpError(
   code: ContentfulStatusCode,
   detail: string,
   customHeaders?: Record<string, string>,
@@ -99,4 +99,4 @@ function createRfcHttpError(
   })
 }
 
-export { createRfcHttpError }
+export { formattedHttpError }

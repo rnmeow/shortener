@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory"
 
-import { createRfcHttpError } from "@/errors/http_error"
+import { formattedHttpError } from "@/errors/http_error"
 
 const middleware = createMiddleware<{
   Bindings: { TURNSTILE_53CR37: string }
@@ -11,13 +11,13 @@ const middleware = createMiddleware<{
   const ip = ctxt.req.header("CF-Connecting-IP")
 
   if (!token) {
-    throw createRfcHttpError(400, "Missing Turnstile token. Skipped CAPTCHA?")
+    throw formattedHttpError(400, "Missing Turnstile token. Skipped CAPTCHA?")
   }
   if (
     !ip &&
     ctxt.env.TURNSTILE_53CR37 !== "1x0000000000000000000000000000000AA"
   ) {
-    throw createRfcHttpError(400, "Missing origin IP")
+    throw formattedHttpError(400, "Missing origin IP")
   }
 
   const payload = {
@@ -41,7 +41,7 @@ const middleware = createMiddleware<{
   )
 
   if (!success) {
-    throw createRfcHttpError(401, "Authentication failed")
+    throw formattedHttpError(401, "Authentication failed")
   }
 })
 
