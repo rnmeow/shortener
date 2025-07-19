@@ -19,8 +19,8 @@ However, to try it out, you can simply follow the instructions in wiki (zh-tw):
 
 * License
 
-(C) 2024, 2025, Connor Kuo, licensed under Affero GPL.
+(C) 2024, 2025, Yu-huan Kuo, licensed under Affero GPL.
 
 ***
 
-16 OCT 2024 (LAST REVISED: 9 JUN 2025)
+16 OCT 2024 (LAST REVISED: 19 JUL 2025)
