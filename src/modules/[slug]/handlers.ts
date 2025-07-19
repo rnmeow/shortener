@@ -33,10 +33,16 @@ const handlers = factory.createHandlers(
       )
     }
 
+    const destination = new URL(results[0].destination as string)
+    const destinationParams = destination.searchParams
+
+    destinationParams.append("utm_source", "a_má_zipped")
+    destinationParams.append("utm_medium", "url_shortener")
+
     return ctxt.body(null, {
       status: 301,
       headers: new Headers({
-        "Location": results[0].destination as string,
+        "Location": destination.href,
         "Cache-Control": "max-age=3600",
       }),
     })
