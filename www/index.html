@@ -106,12 +106,17 @@
           ></code>
         </p>
 
-        <footer>&copy; 2025, Yu-huan Kuo.</footer>
+        <footer>
+          &copy; 2025, Yu-huan Kuo, licensed under
+          <a href="https://github.com/rnmeow/shortener/blob/master/COPYING.txt"
+            >AGPL-3.0</a
+          >.
+        </footer>
       </main>
     </div>
 
     <script>
-      const LOCAL_DOMAINS = ['localhost', '[::1]', '127.0.0.1']
+      const LOCAL_DOMAINS = ["localhost", "[::1]", "127.0.0.1"]
 
       const shortenerData = {
         respProcessing: false,
@@ -131,31 +136,31 @@
           const formData = new FormData(event.target)
 
           const payload = {
-            destination: formData.get('destination'),
-            slug: formData.get('slug'),
+            destination: formData.get("destination"),
+            slug: formData.get("slug"),
           }
 
-          fetch('/api/v0/shorten', {
-            method: 'PUT',
+          fetch("/api/v0/shorten", {
+            method: "PUT",
             body: JSON.stringify(payload),
             headers: new Headers({
-              'Content-Type': 'application/json',
-              'IMPORTANT-NO-OVERWRITE-CF-Turnstile-Response': formData.get(
-                'cf-turnstile-response',
+              "Content-Type": "application/json",
+              "IMPORTANT-NO-OVERWRITE-CF-Turnstile-Response": formData.get(
+                "cf-turnstile-response",
               ),
             }),
           })
             .then(async (resp) => {
               const data = await resp.json()
-              const dataType = resp.headers.get('Content-Type')
+              const dataType = resp.headers.get("Content-Type")
 
-              if (dataType && dataType.includes('application/json')) {
+              if (dataType && dataType.includes("application/json")) {
                 this.res = data
                 this.err = null
                 this.fat = null
               } else if (
                 dataType &&
-                dataType.includes('application/problem+json')
+                dataType.includes("application/problem+json")
               ) {
                 this.res = null
                 this.err = data
@@ -168,7 +173,7 @@
               this.fat = err
             })
 
-          turnstile.reset('.cf-turnstile')
+          turnstile.reset(".cf-turnstile")
         },
       }
     </script>

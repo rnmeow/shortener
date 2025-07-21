@@ -19,7 +19,7 @@ However, to try it out, you can simply follow the instructions in wiki (zh-tw):
 
 * License
 
-(C) 2024, 2025, Yu-huan Kuo, licensed under Affero GPL.
+(C) 2024, 2025, Yu-huan Kuo, licensed under AGPL-3.0.
 
 ***
 
