@@ -154,18 +154,9 @@
               const data = await resp.json()
               const dataType = resp.headers.get("Content-Type")
 
-              if (dataType && dataType.includes("application/json")) {
-                this.res = data
-                this.err = null
-                this.fat = null
-              } else if (
-                dataType &&
-                dataType.includes("application/problem+json")
-              ) {
-                this.res = null
-                this.err = data
-                this.fat = null
-              }
+              this.res = dataType.includes("application/json") ? data : null
+              this.err = dataType.includes("application/problem+json") ? data : null
+              this.fat = null
             })
             .catch((err) => {
               this.res = null
