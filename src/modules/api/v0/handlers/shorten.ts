@@ -17,8 +17,11 @@ const factory = createFactory<{
   Bindings: { DB: D1Database; TURNSTILE_53CR37: string }
 }>()
 
-const isSlugTaken = (db: D1Database, slug: string) =>
-  db.prepare(`SELECT slug FROM URLs WHERE slug = ?;`).bind(slug).all()
+async function isSlugTaken(db: D1Database, slug: string): Promise<boolean> {
+  const resp = await db.prepare(`SELECT slug FROM URLs WHERE slug = ?;`).bind(slug).all()
+
+  return resp.results.length !== 0
+}
 
 const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const { hostnamesBanned, randSlugSize, baseUrl } = config(
@@ -71,13 +74,13 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
 
   let slug = body.slug || nanoid(randSlugSize)
   if (!body.slug) {
-    while ((await isSlugTaken(db, slug)).results.length !== 0) {
+    while (await isSlugTaken(db, slug)) {
       slug = nanoid(randSlugSize)
     }
   } else if (
     slug === "api" ||
     slug === "lib" ||
-    (await isSlugTaken(db, slug)).results.length !== 0
+    await isSlugTaken(db, slug)
   ) {
     throw formattedHttpError(400, `Slug \`${slug}\` is already in use`)
   }
