@@ -71,16 +71,29 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
   }
 
   let slug = body.slug || nanoid(randSlugSize)
-  const hasProvidedSlug: boolean = body.slug !== undefined
+  const hasProvidedSlug: boolean = typeof body.slug === "string"
 
-  for (;;) {
+  const MAX_ATTEMPTS = hasProvidedSlug ? 1 : 10
+
+  for (let i = 0; i < MAX_ATTEMPTS; i++) {
     try {
-      const { success } = await db
+      await db
         .prepare(`INSERT INTO URLs (slug, destination) VALUES (?, ?);`)
         .bind(slug, body.destination)
         .run()
 
-      if (success) break
+      return ctxt.json<
+        JsonResp & {
+          shortenedUrl: string
+        }
+      >({
+        timestamp: Date.now(),
+        version: 0,
+        status: "200 ok",
+        message: "Operation succeeded :)",
+
+        shortenedUrl: new URL(slug, baseUrl).href,
+      })
     } catch (err) {
       const msg =
         err instanceof Error
@@ -101,18 +114,7 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
     }
   }
 
-  return ctxt.json<
-    JsonResp & {
-      shortenedUrl: string
-    }
-  >({
-    timestamp: Date.now(),
-    version: 0,
-    status: "200 ok",
-    message: "Operation succeeded :)",
-
-    shortenedUrl: new URL(slug, baseUrl).href,
-  })
+  throw formattedHttpError(500, "Attempts failed to generate a unique slug")
 })
 
 export { handlers }
