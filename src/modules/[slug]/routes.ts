@@ -5,6 +5,6 @@ import { handlers as slugHandlers } from "./handlers"
 
 const routes = new Hono({ router: new RegExpRouter() })
 
-routes.get("/:slug{[a-zA-Z0-9_-]{3,64}}", ...slugHandlers)
+routes.get("/:slug{[a-zA-Z0-9_-]{3,16}}", ...slugHandlers)
 
 export { routes }

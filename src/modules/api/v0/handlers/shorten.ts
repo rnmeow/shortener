@@ -66,8 +66,8 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
   if (body.slug && typeof body.slug !== "string") {
     throw formattedHttpError(400, "Slug must be a string")
   }
-  if (body.slug && !/^[a-zA-Z0-9_-]{3,64}$/g.test(body.slug)) {
-    throw formattedHttpError(400, "Slug must be safe and 3–64 characters long")
+  if (body.slug && !/^[a-zA-Z0-9_-]{3,16}$/.test(body.slug)) {
+    throw formattedHttpError(400, "Slug must be safe and 3–16 characters long")
   }
 
   const db = ctxt.env.DB
