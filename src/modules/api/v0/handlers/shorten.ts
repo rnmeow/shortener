@@ -71,7 +71,7 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
   }
 
   let slug = body.slug || nanoid(randSlugSize)
-  const hasProvidedSlug: boolean = typeof body.slug === "string"
+  const hasProvidedSlug: boolean = !!body.slug
 
   const MAX_ATTEMPTS = hasProvidedSlug ? 1 : 10
 
@@ -86,14 +86,17 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
         JsonResp & {
           shortenedUrl: string
         }
-      >({
-        timestamp: Date.now(),
-        version: 0,
-        status: "200 ok",
-        message: "Operation succeeded :)",
+      >(
+        {
+          timestamp: Date.now(),
+          version: 0,
+          status: "201 Created",
+          message: "Operation succeeded :)",
 
-        shortenedUrl: new URL(slug, baseUrl).href,
-      })
+          shortenedUrl: new URL(slug, baseUrl).href,
+        },
+        201,
+      )
     } catch (err) {
       const msg =
         err instanceof Error
