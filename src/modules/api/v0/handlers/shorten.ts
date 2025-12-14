@@ -17,12 +17,6 @@ const factory = createFactory<{
   Bindings: { DB: D1Database; TURNSTILE_53CR37: string }
 }>()
 
-async function isSlugTaken(db: D1Database, slug: string): Promise<boolean> {
-  const resp = await db.prepare(`SELECT slug FROM URLs WHERE slug = ?;`).bind(slug).all()
-
-  return resp.results.length !== 0
-}
-
 const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const { hostnamesBanned, randSlugSize, baseUrl } = config(
     ctxt.env.TURNSTILE_53CR37 === "1x0000000000000000000000000000000AA",
@@ -72,26 +66,39 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
 
   const db = ctxt.env.DB
 
-  let slug = body.slug || nanoid(randSlugSize)
-  if (!body.slug) {
-    while (await isSlugTaken(db, slug)) {
-      slug = nanoid(randSlugSize)
-    }
-  } else if (
-    slug === "api" ||
-    slug === "lib" ||
-    await isSlugTaken(db, slug)
-  ) {
-    throw formattedHttpError(400, `Slug \`${slug}\` is already in use`)
+  if (body.slug === "api" || body.slug === "lib") {
+    throw formattedHttpError(400, `Slug \`${body.slug}\` is not available`)
   }
 
-  const { success } = await db
-    .prepare(`INSERT INTO URLs (slug, destination) VALUES (?, ?);`)
-    .bind(slug, body.destination)
-    .run()
+  let slug = body.slug || nanoid(randSlugSize)
+  const hasProvidedSlug: boolean = body.slug !== undefined
 
-  if (!success) {
-    throw formattedHttpError(500, "Error inserting data into the database")
+  for (;;) {
+    try {
+      const { success } = await db
+        .prepare(`INSERT INTO URLs (slug, destination) VALUES (?, ?);`)
+        .bind(slug, body.destination)
+        .run()
+
+      if (success) break
+    } catch (err) {
+      const msg =
+        err instanceof Error
+          ? err.message + (err.cause instanceof Error ? err.cause.message : "")
+          : ""
+
+      if (msg.includes("UNIQUE constraint failed")) {
+        if (!hasProvidedSlug) {
+          slug = nanoid(randSlugSize)
+
+          continue
+        }
+
+        throw formattedHttpError(409, `Slug \`${slug}\` is already in use`)
+      }
+
+      throw formattedHttpError(500, "Error inserting data into the database")
+    }
   }
 
   return ctxt.json<
