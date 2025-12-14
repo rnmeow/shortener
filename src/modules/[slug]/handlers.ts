@@ -10,7 +10,7 @@ const handlers = factory.createHandlers(
   logger(),
   cache({
     cacheName: "_shortened_url",
-    cacheControl: "max-age=172800", // 48 hours
+    cacheControl: "max-age=3600", // 1 hour
   }),
   async (ctxt) => {
     const db = ctxt.env.DB
@@ -42,7 +42,6 @@ const handlers = factory.createHandlers(
       status: 301,
       headers: new Headers({
         "Location": destination.href,
-        "Cache-Control": "max-age=3600",
       }),
     })
   },
