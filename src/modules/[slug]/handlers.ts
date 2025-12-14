@@ -35,8 +35,8 @@ const handlers = factory.createHandlers(
 
     const destination = new URL(results[0].destination as string)
 
-    destination.searchParams.append("utm_source", "a_má_zipped")
-    destination.searchParams.append("utm_medium", "url_shortener")
+    destination.searchParams.set("utm_source", "a_má_zipped")
+    destination.searchParams.set("utm_medium", "url_shortener")
 
     return ctxt.body(null, {
       status: 301,
