@@ -41,9 +41,10 @@ const handlers = factory.createHandlers(
     destination.searchParams.set("utm_medium", "url_shortener")
 
     return ctxt.body(null, {
-      status: 301,
+      status: 307,
       headers: new Headers({
         Location: destination.href,
+        "X-Robots-Tag": "noindex, nofollow",
       }),
     })
   },
