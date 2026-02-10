@@ -17,9 +17,6 @@ const factory = createFactory<{
   Bindings: { DB: D1Database; TURNSTILE_53CR37: string }
 }>()
 
-const isSlugTaken = (db: D1Database, slug: string) =>
-  db.prepare(`SELECT slug FROM URLs WHERE slug = ?;`).bind(slug).all()
-
 const handlers = factory.createHandlers(logger(), async (ctxt) => {
   const { hostnamesBanned, randSlugSize, baseUrl } = config(
     ctxt.env.TURNSTILE_53CR37 === "1x0000000000000000000000000000000AA",
@@ -63,46 +60,64 @@ const handlers = factory.createHandlers(logger(), async (ctxt) => {
   if (body.slug && typeof body.slug !== "string") {
     throw formattedHttpError(400, "Slug must be a string")
   }
-  if (body.slug && !/^[a-zA-Z0-9_-]{3,64}$/g.test(body.slug)) {
-    throw formattedHttpError(400, "Slug must be safe and 3–64 characters long")
+  if (body.slug && !/^[a-zA-Z0-9_-]{3,16}$/.test(body.slug)) {
+    throw formattedHttpError(400, "Slug must be safe and 3–16 characters long")
   }
 
   const db = ctxt.env.DB
 
+  if (body.slug === "api" || body.slug === "lib") {
+    throw formattedHttpError(400, `Slug \`${body.slug}\` is not available`)
+  }
+
   let slug = body.slug || nanoid(randSlugSize)
-  if (!body.slug) {
-    while ((await isSlugTaken(db, slug)).results.length !== 0) {
-      slug = nanoid(randSlugSize)
+  const hasProvidedSlug: boolean = !!body.slug
+
+  const MAX_ATTEMPTS = hasProvidedSlug ? 1 : 10
+
+  for (let i = 0; i < MAX_ATTEMPTS; i++) {
+    try {
+      await db
+        .prepare(`INSERT INTO URLs (slug, destination) VALUES (?, ?);`)
+        .bind(slug, body.destination)
+        .run()
+
+      return ctxt.json<
+        JsonResp & {
+          shortenedUrl: string
+        }
+      >(
+        {
+          timestamp: Date.now(),
+          version: 0,
+          status: "201 Created",
+          message: "Operation succeeded :)",
+
+          shortenedUrl: new URL(slug, baseUrl).href,
+        },
+        201,
+      )
+    } catch (err) {
+      const msg =
+        err instanceof Error
+          ? err.message + (err.cause instanceof Error ? err.cause.message : "")
+          : ""
+
+      if (msg.includes("UNIQUE constraint failed")) {
+        if (!hasProvidedSlug) {
+          slug = nanoid(randSlugSize)
+
+          continue
+        }
+
+        throw formattedHttpError(409, `Slug \`${slug}\` is already in use`)
+      }
+
+      throw formattedHttpError(500, "Error inserting data into the database")
     }
-  } else if (
-    slug === "api" ||
-    slug === "lib" ||
-    (await isSlugTaken(db, slug)).results.length !== 0
-  ) {
-    throw formattedHttpError(400, `Slug \`${slug}\` is already in use`)
   }
 
-  const { success } = await db
-    .prepare(`INSERT INTO URLs (slug, destination) VALUES (?, ?);`)
-    .bind(slug, body.destination)
-    .run()
-
-  if (!success) {
-    throw formattedHttpError(500, "Error inserting data into the database")
-  }
-
-  return ctxt.json<
-    JsonResp & {
-      shortenedUrl: string
-    }
-  >({
-    timestamp: Date.now(),
-    version: 0,
-    status: "200 ok",
-    message: "Operation succeeded :)",
-
-    shortenedUrl: new URL(slug, baseUrl).href,
-  })
+  throw formattedHttpError(500, "Attempts failed to generate a unique slug")
 })
 
 export { handlers }

@@ -10,39 +10,41 @@ const handlers = factory.createHandlers(
   logger(),
   cache({
     cacheName: "_shortened_url",
-    cacheControl: "max-age=172800", // 48 hours
+    cacheControl: "max-age=3600", // 1 hour
   }),
   async (ctxt) => {
     const db = ctxt.env.DB
 
     // should've been checked in routes.ts with regexp
-    const { slug } = ctxt.req.param()
+    const { slug } = ctxt.req.param() as { slug: string }
 
-    const { success, results } = await db
-      .prepare(`SELECT destination FROM URLs WHERE slug = ?;`)
-      .bind(slug)
-      .all()
-
-    if (!success || results.length > 1) {
+    let res
+    try {
+      res = await db
+        .prepare(`SELECT destination FROM URLs WHERE slug = ?;`)
+        .bind(slug)
+        .first()
+    } catch (_err) {
       throw formattedHttpError(500, "Error reading data from the database")
     }
-    if (results.length === 0) {
+
+    if (res === null) {
       throw formattedHttpError(
         404,
         "The requested page may have been removed or renamed",
       )
     }
 
-    const destination = new URL(results[0].destination as string)
+    const destination = new URL(res.destination as string)
 
-    destination.searchParams.append("utm_source", "a_má_zipped")
-    destination.searchParams.append("utm_medium", "url_shortener")
+    destination.searchParams.set("utm_source", "a_má_zipped")
+    destination.searchParams.set("utm_medium", "url_shortener")
 
     return ctxt.body(null, {
-      status: 301,
+      status: 307,
       headers: new Headers({
-        "Location": destination.href,
-        "Cache-Control": "max-age=3600",
+        Location: destination.href,
+        "X-Robots-Tag": "noindex, nofollow",
       }),
     })
   },

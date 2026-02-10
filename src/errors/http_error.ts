@@ -34,6 +34,13 @@ const httpStatusMap = new Map<
     },
   ],
   [
+    409,
+    {
+      title: "Conflict",
+      refSection: "section-15.5.10",
+    },
+  ],
+  [
     418,
     {
       title: "(Unused)",
